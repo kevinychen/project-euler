@@ -1,0 +1,11 @@
+.classpath
+.gradle
+.project
+.settings
+/bin
+build
+
+*.swp
+solutions.txt
+src/test/java/*/p*.java
+

@@ -1,0 +1,48 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile "com.google.guava:guava:27.1-jre"
+    compile "one.util:streamex:0.7.2"
+    compile "org.bouncycastle:bcprov-jdk15on:1.64"
+    compile "org.projectlombok:lombok:1.16.12"
+    testCompile "junit:junit:4.12"
+}
+
+task decrypt(type: JavaExec) {
+    classpath project.sourceSets.main.runtimeClasspath
+    main "main.Decrypter"
+}
+
+task encrypt(type: JavaExec) {
+    classpath project.sourceSets.main.runtimeClasspath
+    main "main.Decrypter"
+    args "encrypt"
+}
+
+/*
+ * Create JAR file: ./gradlew jar -Ptest=level01.p001
+ * Run JAR file: java -jar build/libs/euler.jar
+ */
+jar {
+    from sourceSets.test.output
+    manifest {
+        attributes 'Main-Class': test
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
