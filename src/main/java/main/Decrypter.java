@@ -48,7 +48,6 @@ public class Decrypter {
                         cipher.init(Cipher.ENCRYPT_MODE, spec, new IvParameterSpec(new byte[16]));
                         byte[] encrypted = cipher.doFinal(Files.readAllBytes(decryptedFile));
                         Files.write(encryptedFile, encrypted);
-                        Files.delete(decryptedFile);
                     } else if (!encryptMode && path.equals(encryptedFile)) {
                         cipher.init(Cipher.DECRYPT_MODE, spec, new IvParameterSpec(new byte[16]));
                         byte[] decrypted = cipher.doFinal(Files.readAllBytes(encryptedFile));
