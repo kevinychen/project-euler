@@ -37,6 +37,10 @@ import data.LTriangle;
 import data.QuotientValues;
 import one.util.streamex.EntryStream;
 
+/**
+ * Common functions in all areas that can be conveniently called from all tests that subclass
+ * {@link EulerLib}.
+ */
 public class EulerLib {
 
     /*********************************************************************************
@@ -258,8 +262,8 @@ public class EulerLib {
         return sq(isqrt(n)) == n;
     }
 
-    public static boolean isSq(long n, long p) {
-        return pow(n, (p - 1) / 2, p) <= 1;
+    public static boolean isSq(long n, long pmod) {
+        return pow(n, (pmod - 1) / 2, pmod) <= 1;
     }
 
     public static long cb(long n) {
@@ -854,6 +858,10 @@ public class EulerLib {
                 mobius[i] = 1;
             else if (mobius[i] > 0)
                 mobius[i] = -1;
+    }
+
+    public static int igcd(int a, int b) {
+        return b == 0 ? a : igcd(b, a % b);
     }
 
     public static long gcd(long a, long b) {

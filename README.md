@@ -1,6 +1,6 @@
-# Project Euler
+# Project Euler Java library and solutions
 
-Java programs for Project Euler. Every solution satisfies the one-minute rule. Most solutions complete in less than a few seconds. Most files have a detailed explanation of the solution, and each program is written to be as readable and clean as possible. To keep with the spirit of Project Euler, each solution is encrypted with its corresponding answer.
+Java programs for Project Euler. Every solution satisfies the one-minute rule. Most solutions complete in less than a few seconds. Each file has a detailed explanation of the solution, and each program is written to be as readable and clean as possible. To keep with the spirit of Project Euler, each solution is encrypted with its corresponding answer.
 
 | Problems | Total time to run 100 solutions |
 | --- | --- |
