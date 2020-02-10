@@ -397,6 +397,11 @@ public class EulerLib {
         return fibonaccis().get(n);
     }
 
+    public static long fibonacci(long n, long mod) {
+        long[][] A = { { 0, 1 }, { 1, 1 } };
+        return pow(A, n, mod)[1][0];
+    }
+
     public static boolean isPalindrome(Object o) {
         String s = o + "";
         return (sb(s).reverse() + "").equals(s);
