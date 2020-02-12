@@ -1201,13 +1201,15 @@ public class EulerLib {
         }
     }
 
-    public static int[] primeCount;
-
-    public static void prePrimeCount(int limit) {
+    /**
+     * A[n] = π(n), the number of primes ≤ n.
+     */
+    public static int[] primeCounts(int limit) {
         preff(limit);
-        primeCount = new int[limit + 1];
+        int[] primeCounts = new int[limit + 1];
         for (int i = 2; i <= limit; i++)
-            primeCount[i] = primeCount[i - 1] + (ff[i] == i ? 1 : 0);
+            primeCounts[i] = primeCounts[i - 1] + (ff[i] == i ? 1 : 0);
+        return primeCounts;
     }
 
     public static long[] isSquareFree;
