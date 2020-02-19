@@ -17,6 +17,7 @@ dependencies {
     compile "com.google.guava:guava:27.1-jre"
     compile "one.util:streamex:0.7.2"
     compile "org.bouncycastle:bcprov-jdk15on:1.64"
+    compile "org.jacop:jacop:4.7.0"
     compile "org.projectlombok:lombok:1.16.12"
     testCompile "junit:junit:4.12"
 }
