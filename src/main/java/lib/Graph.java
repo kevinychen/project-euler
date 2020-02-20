@@ -101,13 +101,15 @@ public final class Graph<T> extends EulerLib {
     }
 
     public long kruskal() {
+        Map<T, Integer> ordering = indexMap(vertices);
         List<Entry<Edge, Long>> edges = list((Iterable<Entry<Edge, Long>>) weights.entries());
         Collections.sort(edges, (edge1, edge2) -> Long.compare(edge1.getValue(), edge2.getValue()));
-        UnionFind<Object> uf = UnionFind.create();
+        UnionFind uf = new UnionFind(vertices.size());
         long minimumSpanningTreeLen = 0;
         for (Entry<Edge, Long> edge : edges) {
-            Object start = edge.getKey().start, end = edge.getKey().end;
-            if (!uf.find(start).equals(uf.find(end))) {
+            int start = ordering.get(edge.getKey().start);
+            int end = ordering.get(edge.getKey().end);
+            if (uf.find(start) != uf.find(end)) {
                 minimumSpanningTreeLen += edge.getValue();
                 uf.union(start, end);
             }

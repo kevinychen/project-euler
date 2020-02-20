@@ -1,41 +1,50 @@
 
 package lib;
 
-import java.util.HashMap;
-import java.util.Map;
+public class UnionFind {
 
-public final class UnionFind<T> {
+    private int[] parents, ranks, sizes;
 
-    private Map<T, T> parents = new HashMap<>();
-    private Map<T, Integer> ranks = new HashMap<>();
-
-    public static <T> UnionFind<T> create() {
-        return new UnionFind<>();
+    public UnionFind(int maxNumObjs) {
+        parents = new int[maxNumObjs];
+        for (int i = 0; i < maxNumObjs; i++)
+            parents[i] = i;
+        ranks = new int[maxNumObjs];
+        sizes = new int[maxNumObjs];
+        for (int i = 0; i < maxNumObjs; i++)
+            sizes[i] = 1;
     }
 
-    public T find(T obj) {
-        T rep = obj;
-        while (parents.containsKey(rep))
-            rep = parents.get(rep);
-        while (parents.containsKey(obj))
-            obj = parents.put(obj, rep);
+    public int find(int n) {
+        int rep = n;
+        while (parents[rep] != rep)
+            rep = parents[rep];
+        while (parents[n] != n) {
+            int temp = parents[n];
+            parents[n] = rep;
+            n = temp;
+        }
         return rep;
     }
 
-    public void union(T obj1, T obj2) {
-        obj1 = find(obj1);
-        obj2 = find(obj2);
-        if (obj1.equals(obj2))
+    public void union(int n1, int n2) {
+        int rep1 = find(n1), rep2 = find(n2);
+        if (rep1 == rep2)
             return;
-        int rank1 = ranks.getOrDefault(obj1, 0);
-        int rank2 = ranks.getOrDefault(obj2, 0);
-        if (rank1 < rank2)
-            parents.put(obj1, obj2);
-        else if (rank2 < rank1)
-            parents.put(obj2, obj1);
-        else {
-            parents.put(obj1, obj2);
-            ranks.put(obj2, rank2 + 1);
+        if (ranks[rep1] < ranks[rep2]) {
+            parents[rep1] = rep2;
+            sizes[rep2] += sizes[rep1];
+        } else if (ranks[rep2] < ranks[rep1]) {
+            parents[rep2] = rep1;
+            sizes[rep1] += sizes[rep2];
+        } else {
+            parents[rep1] = rep2;
+            ranks[rep2]++;
+            sizes[rep2] += sizes[rep1];
         }
+    }
+
+    public int size(int n) {
+        return sizes[find(n)];
     }
 }
