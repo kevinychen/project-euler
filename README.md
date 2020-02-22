@@ -1,30 +1,48 @@
 # Project Euler Java library and solutions
 
-Java programs for Project Euler. Every solution satisfies the one-minute rule. Most solutions complete in less than a few seconds. Each file has a detailed explanation of the solution, and each program is written to be as readable and clean as possible. To keep with the spirit of Project Euler, each solution is encrypted with its corresponding answer.
+Java programs for [Project Euler](https://projecteuler.net). Every solution satisfies the one-minute rule. Most solutions complete in less than a few seconds. To keep with the spirit of Project Euler, each solution is encrypted with its corresponding answer.
 
-| Problems | Total time to run 100 solutions |
-| --- | --- |
-| 1 to 100 | 6 seconds |
-| 101 to 200 | 13 seconds |
-| 201 to 300 | 96 seconds |
-| 301 to 400 | 119 seconds |
-| 401+ | In progress! |
+| Level | Problems | Total time to run 25 solutions |
+| --- | --- | --- |
+| 1 | 1 to 25 | 0.9 seconds |
+| 2 | 26 to 50 | 1.0 seconds |
+| 3 | 51 to 75 | 2.2 seconds |
+| 4 | 76 to 100 | 1.7 seconds |
+| 5 | 101 to 125 | 1.0 seconds |
+| 6 | 126 to 150 | 2.2 seconds |
+| 7 | 151 to 175 | 4.3 seconds |
+| 8 | 176 to 200 | 5.7 seconds |
+| 9 | 201 to 225 | 19.6 seconds |
+| 10 | 226 to 250 | 11.3 seconds |
+| 11 | 251 to 275 | 36.3 seconds |
+| 12 | 276 to 300 | 28.8 seconds |
+| 13 | 301 to 325 | 21.9 seconds |
+| 14 | 326 to 350 | 25.2 seconds |
+| 15 | 351 to 375 | 41.6 seconds |
+| 16 | 376 to 400 | 30.7 seconds |
+| 17 | 401 to 425 | 100.1 seconds |
+| 18+ | 426+ | In progress! |
 
-### Setup
+## Setup
 
-Each solution is encrypted with the answer to that problem. In order to decrypt them, create a file called `solutions.txt` in the root directory in the following format (you do not need to include all answers):
-
-    1. [answer to Problem 1]
-    2. [answer to Problem 2]
-    ...
-
-Then run the following (requires JDK 8):
+This repository contains a Gradle task that will decrypt the files for all problems that you have solved. Run the following (requires JDK 8):
 
     $ ./gradlew decrypt
 
-This will decrypt all the files that you included an answer for. Note: if you included a wrong answer, the decrypted file will be garbage!
+The task will prompt you to enter your Project Euler credentials. This is only for fetching the answers to your solved problems, in order to decrypt the files; the task does not save any data or make any changes to your account.
 
-### Running tests
+If you do not wish to enter your credentials, or you are offline, then you may instead create a file `solutions.txt` in the root directory in the following format (you do not need to include all answers):
+
+    1. answer to Problem 1
+    2. answer to Problem 2
+
+Then run:
+
+    $ ./gradlew decrypt -Poffline
+
+Decrypted files will be at `src/test/java/levelXX/pXXX.java`.
+
+## Running tests
 
 Each solution is a JUnit test that can be run in Eclipse. A test can also be run directly with Gradle:
 
@@ -34,7 +52,7 @@ To run all tests (takes a few minutes):
 
     $ ./gradlew test
 
-### Development
+## Development
 
 To setup the Eclipse project, run the following:
 
@@ -46,7 +64,7 @@ To import this project, open Eclipse and click "Import" -> "Existing Projects in
 
 To maintain consist style in Eclipse, import the `formatter.xml` file in the root directory of this repository. Under project-specific preferences, select "Java Code Style" -> "Formatter", and import the `formatter.xml` profile.
 
-Encrypt all solution files before committing by adding the corresponding answers to `solutions.txt` and then running:
+Encrypt all solution files before committing by running:
 
     $ ./gradlew encrypt
 

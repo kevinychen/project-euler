@@ -1,0 +1,255 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath "com.google.guava:guava:27.1-jre";
+        classpath "org.bouncycastle:bcprov-jdk15on:1.64";
+        classpath "org.jsoup:jsoup:1.12.2";
+    }
+}
+
+import com.google.common.base.Strings
+import com.google.common.io.CharStreams
+import groovy.swing.SwingBuilder
+import java.awt.GraphicsEnvironment
+import java.awt.Point
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.security.GeneralSecurityException
+import java.security.Security
+import java.util.concurrent.ConcurrentHashMap
+import java.util.regex.Pattern
+import java.util.stream.Collectors
+import javax.crypto.Cipher
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
+import javax.swing.WindowConstants
+import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.jsoup.Jsoup
+
+final HOST = 'https://projecteuler.net';
+
+Security.addProvider(new BouncyCastleProvider());
+
+/**
+ * @param path The path of the file to encrypt/decrypt
+ * @param key The encryption key, as any string with at most 32 bytes in UTF-8
+ * @param mode Either Cipher.ENCRYPT_MODE or Cipher.DECRYPT_MODE
+ * @return The encrypted/decrypted byte array
+ */
+def encryptPathWithKey(path, key, mode) {
+    def cipher = Cipher.getInstance('AES/GCM/NoPadding', 'BC');
+    cipher.init(
+            mode,
+            new SecretKeySpec(Strings.padEnd(key, 32, ' ' as char).getBytes('UTF-8'), 'AES'),
+            new IvParameterSpec(new byte[16]));
+    return cipher.doFinal(Files.readAllBytes(path));
+}
+
+/**
+ * Encrypts a file using the answer found in the file of the form "check({answer});".
+ * @param path The path of the file to encrypt/decrypt
+ * @return The encrypted byte array, or null if no answer was found
+ */
+def encryptPath(path) {
+    for (def line : Files.readAllLines(path)) {
+        def m = line =~ /^\s*check\((?:.* )?"?([^ "L]+)["L]?\);$/;
+        if (m) {
+            return encryptPathWithKey(path, m.group(1), Cipher.ENCRYPT_MODE);
+        }
+    }
+}
+
+/**
+ * Encrypts all test files of the form p*.java.
+ */
+task encrypt() << {
+    fileTree(sourceSets.test.java.srcDirs[0]).visit { details ->
+        def path = details.file.path;
+        if (path =~ /p(\d+)\.java$/) {
+            def encrypted = encryptPath(Paths.get(path));
+            if (encrypted != null)
+                Files.write(Paths.get("${path}.enc"), encrypted);
+        }
+    }
+}
+
+/**
+ * Decrypts all encrypted files that the user has solved (that the Project Euler website shows an answer for).
+ */
+task decrypt() << {
+    if (project.hasProperty('offline')) {
+        def offlinePath = Paths.get('solutions.txt');
+        if (!Files.exists(offlinePath))
+            throw new GradleException('Decryption running in offline mode, but solutions.txt not found. Exiting.');
+        def problemKeys = Files.lines(offlinePath)
+            .collect { line -> line =~ /(\d+)\. (\S+)/ } // parse lines of the form "1. answer to Problem 1"
+            .findAll { m -> m }
+            .collectEntries { m ->
+                [ Integer.parseInt(m.group(1)), m.group(2) ]
+            };
+        System.out.println("Found ${problemKeys.size()} answers in solutions.txt file.");
+        fileTree(sourceSets.test.java.srcDirs[0]).visit { details ->
+            def path = details.file.path;
+            def m = path =~ /p(\d+)\.java.enc$/;
+            if (m) {
+                def problem = Integer.parseInt(m.group(1));
+                def key = problemKeys[problem];
+                if (key) {
+                    def decryptedPath = Paths.get(path.replaceAll(/\.enc$/, ''));
+                    try {
+                        Files.write(
+                                decryptedPath,
+                                encryptPathWithKey(Paths.get(path), key, Cipher.DECRYPT_MODE));
+                    } catch (GeneralSecurityException e) {
+                        throw new GradleException("Error decrypting ${path} with key: ${key}."
+                                + "You likely have the wrong answer for problem ${problem}.");
+                    }
+                }
+            }
+        }
+        return;
+    }
+
+    // First visit the sign in page to get a PHPSESSID
+    def connection = new URL("$HOST/sign_in").openConnection();
+    def setCookieHeader = connection.getHeaderField('Set-cookie');
+    def phpSessId = HttpCookie.parse(setCookieHeader).find { cookie -> cookie.getName() == 'PHPSESSID' }.getValue();
+
+    // Generate a new CAPTCHA for the session
+    def tempCaptchaImage = File.createTempFile('project-euler-captcha', '.png');
+    connection = new URL("$HOST/captcha/show_captcha.php?${Math.random()}").openConnection();
+    connection.setRequestProperty('Cookie', "PHPSESSID=$phpSessId");
+    tempCaptchaImage.withOutputStream { out ->
+        out << connection.getInputStream();
+    }
+
+    // Prompt the user for the username, password, and CAPTCHA value
+    def username, password, captcha;
+    new SwingBuilder().edt {
+        dialog(
+                modal: true,
+                title: 'Sign In',
+                alwaysOnTop: true,
+                resizable: false,
+                pack: true,
+                show: true,
+                defaultCloseOperation: WindowConstants.DISPOSE_ON_CLOSE,
+              ) {
+            vbox {
+                def usernameInput, passwordInput, captchaInput;
+                hbox {
+                    label(text: 'Username: ');
+                    usernameInput = textField(columns: 7);
+                }
+                hbox {
+                    label(text: 'Password: ');
+                    passwordInput = passwordField(columns: 7);
+                }
+                hbox {
+                    label(text: 'Confirmation Code: ');
+                    captchaInput = textField(columns: 7);
+                }
+                hbox {
+                    label(icon: imageIcon(tempCaptchaImage.getPath()))
+                }
+                hbox {
+                    button(
+                            defaultButton: true,
+                            text: 'OK',
+                            actionPerformed: {
+                            username = usernameInput.text;
+                            password = passwordInput.password;
+                            captcha = captchaInput.text;
+                            dispose();
+                            },
+                          )
+                }
+            }
+
+            current.pack();
+            Point centerPoint = GraphicsEnvironment.localGraphicsEnvironment.centerPoint;
+            current.location = new Point(
+                    (int) (centerPoint.x - current.width * 0.5),
+                    (int) (centerPoint.y - current.height * 0.5));
+        }
+    }
+    tempCaptchaImage.delete();
+    if (!username || !password || !captcha)
+        throw new GradleException('Credentials not fully provided. Please try again.');
+
+    // Sign in to Project Euler with the credentials
+    System.out.println("Signing in to ${HOST}...");
+    connection = new URL("$HOST/sign_in").openConnection();
+    connection.setDoOutput(true);
+    connection.setRequestMethod('POST');
+    connection.setRequestProperty('Content-type', 'application/x-www-form-urlencoded');
+    connection.setRequestProperty('Cookie', "PHPSESSID=$phpSessId");
+    connection.connect();
+    new DataOutputStream(connection.getOutputStream()).withCloseable { out ->
+        out.write(("username=${URLEncoder.encode(username)}"
+                + "&password=${URLEncoder.encode(new String(password))}"
+                + "&captcha=$captcha&sign_in=Sign+In").getBytes('UTF-8'));
+    }
+    CharStreams.toString(new InputStreamReader(connection.getInputStream(), 'UTF-8'));
+
+    // Parse all solved problems from the progress page. Each one looks like:
+    //
+    // <td class="problem_solved">
+    //   <a href="problem=1">
+    //     ...
+    //   </a>
+    // </td>
+    def solvedProblems = Jsoup.connect("$HOST/progress").cookie('PHPSESSID', phpSessId).get()
+        .select('.problem_solved a')
+        .collect({ el -> el.attr('href').with { href -> Integer.parseInt(href.split('=')[1]) } });
+    if (solvedProblems.isEmpty())
+        throw new GradleException('No solved problems found. You may have supplied the wrong credentials. Please try again.');
+
+    // Find all files that can be decrypted
+    def problems = [:];
+    fileTree(sourceSets.test.java.srcDirs[0]).visit { details ->
+        def path = details.file.path;
+        def m = path =~ /p(\d+)\.java.enc$/;
+        if (m) {
+            def problem = Integer.parseInt(m.group(1));
+            if (!solvedProblems.contains(problem))
+                return;
+
+            def decryptedPath = Paths.get(path.replaceAll(/\.enc$/, ''));
+            if (!Files.exists(decryptedPath)
+                    || !Arrays.equals(Files.readAllBytes(Paths.get(path)), encryptPath(decryptedPath)))
+                problems[problem] = path;
+        }
+    }
+    System.out.println("Found ${problems.size()} problems to decrypt.");
+
+    // There is no batch API to fetch answers, so visit all problem pages in parallel.
+    // Each page has an answer box that looks like:
+    //
+    // <table class="table_center">
+    //   <tbody><tr><td>
+    //     <b>Answer</b>
+    //   </td></tr></tbody>
+    // </table>
+    def problemKeys = new ConcurrentHashMap<>();
+    problems.keySet().parallelStream().forEach { problem ->
+        def key = Jsoup.connect("$HOST/problem=$problem").cookie('PHPSESSID', phpSessId).get()
+            .select('.table_center b')
+            .text();
+        if (!key) {
+            System.err.println("Failed to get answer for problem ${problem}.");
+            return;
+        }
+        problemKeys.put(problem, key);
+    }
+
+    // Decrypt the files.
+    problems.forEach { problem, path ->
+        def decryptedPath = Paths.get(path.replaceAll(/\.enc$/, ''));
+        Files.write(decryptedPath, encryptPathWithKey(Paths.get(path), problemKeys[problem], Cipher.DECRYPT_MODE));
+    }
+}
+
