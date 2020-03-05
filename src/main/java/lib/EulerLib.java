@@ -89,6 +89,16 @@ public class EulerLib {
         }
     }
 
+    public static void runWithLargeStack(Runnable r) {
+        Thread thread = new Thread(null, r, "", 1 << 21);
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static String join(List<?> objs) {
         return join(objs, "");
     }
