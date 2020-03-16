@@ -149,18 +149,18 @@ public class NumberTheory extends EulerLib {
      */
     public static QuotientValues sumPhis(long n, int e, long mod) {
         int L = (int) Math.pow(n, 1. / 3) + 1;
-        int L2 = (int) Math.pow(n, 2. / 3);
-        long[] big = new long[L + 1];
-        long[] small = new long[L2];
+        int L2 = (int) (n / L);
+        long[] big = new long[L];
+        long[] small = new long[L2 + 1];
         prePhi(L2);
-        for (int i = 1; i < L2; i++) {
+        for (int i = 1; i <= L2; i++) {
             small[i] = small[i - 1] + pow(i, e, mod) * phi[i];
             small[i] %= mod;
         }
-        for (int i = L; i >= 1; i--) {
+        for (int i = L; --i >= 1;) {
             big[i] = sumPowers(n / i, e + 1, mod);
             for (int k = 2; k < isqrt(n / i); k++) {
-                big[i] -= pow(k, e, mod) * (1L * i * k <= L ? big[i * k] : small[(int) (n / i / k)]);
+                big[i] -= pow(k, e, mod) * (1L * i * k < L ? big[i * k] : small[(int) (n / i / k)]);
                 big[i] %= mod;
             }
             for (int t = 1; t <= n / i / isqrt(n / i); t++) {
@@ -180,16 +180,16 @@ public class NumberTheory extends EulerLib {
      */
     public static QuotientValues mertens(long n) {
         int L = (int) Math.pow(n, 1. / 3) + 1;
-        int L2 = (int) Math.pow(n, 2. / 3);
-        long[] big = new long[L + 1];
-        long[] small = new long[L2];
+        int L2 = (int) (n / L);
+        long[] big = new long[L];
+        long[] small = new long[L2 + 1];
         preMobius(L2);
-        for (int i = 1; i < L2; i++)
+        for (int i = 1; i <= L2; i++)
             small[i] = small[i - 1] + mobius[i];
-        for (int i = L; i >= 1; i--) {
+        for (int i = L; --i >= 1;) {
             big[i] = 1;
             for (int k = 2; k < isqrt(n / i); k++)
-                big[i] -= 1L * i * k <= L ? big[i * k] : small[(int) (n / i / k)];
+                big[i] -= 1L * i * k < L ? big[i * k] : small[(int) (n / i / k)];
             for (int t = 1; t <= n / i / isqrt(n / i); t++)
                 big[i] -= (n / i / t - n / i / (t + 1)) * small[t];
         }
