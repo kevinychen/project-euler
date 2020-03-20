@@ -9,16 +9,18 @@ import lombok.Data;
 
 public class FloorSums extends EulerLib {
 
+    private static final int MAX_ORDER = 10;
+
     private final long M;
     private final long[][] nCrs;
     private final LFraction[][] sumPowerCoefficients;
     private final Map<Key, Long> cache;
 
-    private FloorSums(int limit, long M) {
+    public FloorSums(long M) {
         this.M = M;
-        this.nCrs = nCrs(limit, M);
-        this.sumPowerCoefficients = new LFraction[limit][];
-        for (int exp = 0; exp < limit; exp++)
+        this.nCrs = nCrs(MAX_ORDER, M);
+        this.sumPowerCoefficients = new LFraction[MAX_ORDER][];
+        for (int exp = 0; exp < MAX_ORDER; exp++)
             sumPowerCoefficients[exp] = sumPowerCoefficients(exp);
         this.cache = new HashMap<>();
     }
@@ -28,8 +30,9 @@ public class FloorSums extends EulerLib {
      *
      * See https://discuss.codechef.com/t/window-editorial/1069.
      */
-    public static long sumPowers(long N, ContinuedFraction F, int K, int L, long M) {
-        return new FloorSums(K + L, M).sumPowers(N, F, K, L, false);
+    public long sumPowers(long N, ContinuedFraction F, int K, int L) {
+        cache.clear();
+        return sumPowers(N, F, K, L, false);
     }
 
     /**
