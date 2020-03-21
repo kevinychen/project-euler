@@ -1083,23 +1083,37 @@ public class EulerLib {
     /**
      * Find x such that x≡a_i (mod m_i) for all i. The m_i must be pairwise coprime.
      */
-    public static long crt(long[] as, long[] ms) {
+    public static long crt(List<? extends Number> as, List<? extends Number> ms) {
         long M = 1;
-        for (long m : ms)
-            M *= m;
+        for (Number m : ms)
+            M *= m.longValue();
         long crt = 0;
-        for (int i = 0; i < as.length; i++)
-            crt += as[i] * (M / ms[i]) * modInv(M / ms[i], ms[i]);
+        for (int i = 0; i < as.size(); i++) {
+            long m = ms.get(i).longValue();
+            crt += as.get(i).longValue() * (M / m) * modInv(M / m, m);
+        }
         return mod(crt, M);
     }
 
-    public static BigInteger crt(BigInteger[] as, BigInteger[] ms) {
+    /**
+     * Find x such that x≡f(m) (mod m) for all m. All m must be pairwise coprime.
+     */
+    public static <T extends Number> long crt(Function<T, Long> f, List<T> ms) {
+        List<Long> as = list();
+        for (T m : ms)
+            as.add(f.apply(m));
+        return crt(as, ms);
+    }
+
+    public static BigInteger bcrt(List<BigInteger> as, List<BigInteger> ms) {
         BigInteger M = big(1);
         for (BigInteger m : ms)
             M = M.multiply(m);
         BigInteger crt = big(0);
-        for (int i = 0; i < as.length; i++)
-            crt = crt.add(as[i].multiply(M.divide(ms[i])).multiply(M.divide(ms[i]).modInverse(ms[i])));
+        for (int i = 0; i < as.size(); i++) {
+            BigInteger m = ms.get(i);
+            crt = crt.add(as.get(i).multiply(M.divide(m)).multiply(M.divide(m).modInverse(m)));
+        }
         return crt.mod(M);
     }
 
@@ -1116,7 +1130,7 @@ public class EulerLib {
             BigInteger m = BigInteger.probablePrime(31, random);
             as.add(big(mod(f.apply(m.longValue()), m.longValue())));
             ms.add(m);
-            BigInteger newResult = crt(as.toArray(new BigInteger[as.size()]), ms.toArray(new BigInteger[ms.size()]));
+            BigInteger newResult = bcrt(as, ms);
             if (result.equals(newResult))
                 return result;
             result = newResult;
