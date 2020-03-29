@@ -408,8 +408,18 @@ public class EulerLib {
     }
 
     public static long fibonacci(long n, long mod) {
-        long[][] A = { { 0, 1 }, { 1, 1 } };
-        return pow(A, n, mod)[1][0];
+        long a = 0, b = 1;
+        for (long bit = Long.highestOneBit(n) >> 1; bit > 0; bit >>= 1) {
+            long new_a = b * b + a * a;
+            long new_b = b * b + 2 * a * b;
+            if ((n & bit) > 0) {
+                new_b += new_a;
+                new_a = new_b - new_a;
+            }
+            a = new_a % mod;
+            b = new_b % mod;
+        }
+        return b;
     }
 
     public static boolean isPalindrome(Object o) {
