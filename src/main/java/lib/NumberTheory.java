@@ -167,8 +167,6 @@ public class NumberTheory extends EulerLib {
                 big[i] -= (sumPowers(n / i / t, e, mod) - sumPowers(n / i / (t + 1), e, mod)) * small[t];
                 big[i] %= mod;
             }
-            if (big[i] < 0)
-                big[i] += mod;
         }
         return new QuotientValues(n, big, small);
     }
