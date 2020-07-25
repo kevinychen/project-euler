@@ -92,19 +92,27 @@ public class NumberTheory extends EulerLib {
         return numTriplets;
     }
 
-    /**
-     * Computes sum_{k=1}^limit ⌊n/k⌋ in O(√n) time.
-     */
     public static long sumFloorQuotients(long n, long limit) {
+        return sumFloorQuotients(n, 0, limit, Long.MAX_VALUE);
+    }
+
+    /**
+     * Computes sum_{k=1}^limit k^e ⌊n/k⌋ in O(√n) time.
+     */
+    public static long sumFloorQuotients(long n, int e, long limit, long mod) {
         if (limit <= 0)
             return 0;
         int L = isqrt(n);
-        long ans = 0;
-        for (int k = 1; k <= limit && k <= L; k++)
-            ans += n / k;
-        for (long q = n / limit; q < n / L; q++)
-            ans += (Math.min(n / q, limit) - n / (q + 1)) * q;
-        return ans;
+        long sumFloorQuotients = 0;
+        for (int k = 1; k <= limit && k <= L; k++) {
+            sumFloorQuotients += n / k * pow(k, e, mod);
+            sumFloorQuotients %= mod;
+        }
+        for (long q = n / limit; q < n / L; q++) {
+            sumFloorQuotients += (sumPowers(Math.min(n / q, limit), e, mod) - sumPowers(n / (q + 1), e, mod)) * q;
+            sumFloorQuotients %= mod;
+        }
+        return sumFloorQuotients;
     }
 
     /**
