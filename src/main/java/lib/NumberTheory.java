@@ -104,11 +104,11 @@ public class NumberTheory extends EulerLib {
             return 0;
         int L = isqrt(n);
         long sumFloorQuotients = 0;
-        for (int k = 1; k <= limit && k <= L; k++) {
+        for (int k = 1; k <= limit && k <= n / L; k++) {
             sumFloorQuotients += n / k * pow(k, e, mod);
             sumFloorQuotients %= mod;
         }
-        for (long q = n / limit; q < n / L; q++) {
+        for (long q = n / limit; q < L; q++) {
             sumFloorQuotients += (sumPowers(Math.min(n / q, limit), e, mod) - sumPowers(n / (q + 1), e, mod)) * q;
             sumFloorQuotients %= mod;
         }
