@@ -899,6 +899,7 @@ public class EulerLib {
             for (int i = 0; i <= limit; i += g)
                 for (int j = 0; j <= limit; j += g)
                     gcds[i][j] = g;
+        gcds[0][0] = 0;
         return gcds;
     }
 
