@@ -50,7 +50,7 @@ public class DirichletSeriesContext {
     /**
      * Returns (a_1)/1^s + (a_2)/2^s + (a_3)/3^s + ... (a_1 is the first value)
      */
-    public QuotientValues create(int... a_n) {
+    public QuotientValues create(long... a_n) {
         long[] cumSums = new long[a_n.length + 1];
         for (int i = 0; i < a_n.length; i++)
             cumSums[i + 1] = cumSums[i] + a_n[i];
@@ -110,6 +110,7 @@ public class DirichletSeriesContext {
                 int d = divisors[startIndices[i] + j];
                 small[i] += (ds1.get(d) - ds1.get(d - 1)) * (ds2.get(i / d) - ds2.get(i / d - 1));
             }
+            small[i] %= M;
         }
         for (int i = L; --i >= 1;) {
             int limit = EulerLib.isqrt(N / i);
@@ -118,6 +119,7 @@ public class DirichletSeriesContext {
             for (int y = 1; y <= limit; y++)
                 big[i] += (ds2.get(y) - ds2.get(y - 1)) * ds1.div(i * y);
             big[i] -= ds1.get(limit) * ds2.get(limit);
+            big[i] %= M;
         }
         return new QuotientValues(N, big, small);
     }

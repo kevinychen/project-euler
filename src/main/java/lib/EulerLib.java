@@ -969,10 +969,10 @@ public class EulerLib {
     }
 
     public static long gnCr(int a, int... bs) {
-        long nCr = factorial(a);
+        BigInteger nCr = bfactorial(a);
         for (int b : bs)
-            nCr /= factorial(b);
-        return nCr;
+            nCr = nCr.divide(bfactorial(b));
+        return nCr.longValue();
     }
 
     public static long[][] nCrs(int limit, long M) {
