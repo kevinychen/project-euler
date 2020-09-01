@@ -1295,6 +1295,13 @@ public class EulerLib {
         numSquareFrees = new QuotientValues(n, big, small);
     }
 
+    /**
+     * An approximation of the nth Harmonic number 1 + 1/2 + 1/3 + ... + 1/n.
+     */
+    public static double harmonic(double n) {
+        return Math.log(n) + 1 / (2 * n) - 1 / (12 * fsq(n)) + 1 / (120 * Math.pow(n, 4));
+    }
+
     /*********************************************************************************
      * BASIC DATA STRUCTURES.
      *********************************************************************************/
