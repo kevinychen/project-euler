@@ -25,6 +25,8 @@ Java programs for [Project Euler](https://projecteuler.net). Every solution sati
 | 19 | 451 to 475 | 73.1 seconds |
 | 20+ | 476+ | In progress! |
 
+(Run on Intel Core i9 @ 2.3GHz.)
+
 ## Setup
 
 This repository contains a Gradle task that will decrypt the files for all problems that you have solved. Run the following (requires JDK 8):
