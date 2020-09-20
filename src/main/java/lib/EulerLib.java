@@ -344,6 +344,17 @@ public class EulerLib {
         return pows;
     }
 
+    public static long[] nthPows(int limit, long exp, long mod) {
+        preff(limit);
+        long[] pows = new long[limit + 1];
+        for (int i = 1; i <= limit; i++)
+            if (ff[i] == i)
+                pows[i] = pow(i, exp, mod);
+            else
+                pows[i] = pows[ff[i]] * pows[i / ff[i]] % mod;
+        return pows;
+    }
+
     public static long ceil(long a, long b) {
         return (a + b - 1) / b;
     }
@@ -1227,13 +1238,26 @@ public class EulerLib {
                 throw die();
         } else if (exp == 3)
             return sq(tr(limit, mod), mod);
-        else {
-            LFraction[] sumPowerCoefficients = sumPowerCoefficients(exp);
-            BFraction sumPowers = BFraction.integer(0);
-            for (int e = exp + 1; e >= 0; e--)
-                sumPowers = sumPowers.multiply(BFraction.integer(limit)).add(BFraction.fromFraction(sumPowerCoefficients[e]));
-            return sumPowers.num.mod(big(mod)).longValue();
+
+        long[] pows = nthPows(exp + 2, exp, mod);
+        long[] factorials = factorials(exp + 1, mod);
+        long sumPows = 0;
+        long res = 0;
+        for (int j = 1; j <= exp + 2; j++) {
+            sumPows += pows[j];
+            sumPows %= mod;
+            if (j == limit)
+                return sumPows;
+            res += sumPows
+                    * parity(exp + j)
+                    * modInv((limit - j) % mod * factorials[j - 1] % mod * factorials[exp + 2 - j] % mod, mod);
+            res %= mod;
         }
+        for (int j = 1; j <= exp + 2; j++) {
+            res *= (limit - j) % mod;
+            res %= mod;
+        }
+        return res;
     }
 
     /**
