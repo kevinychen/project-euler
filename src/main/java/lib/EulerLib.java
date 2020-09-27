@@ -280,6 +280,10 @@ public class EulerLib {
         return n * n * n;
     }
 
+    public static long cb(long n, long mod) {
+        return n * n % mod * n % mod;
+    }
+
     public static int itr(int n) {
         return n * (n + 1) / 2;
     }
