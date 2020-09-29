@@ -411,10 +411,10 @@ public class EulerLib {
         return fibonaccis;
     }
 
-    public static List<BigInteger> bfibonaccis(int limit) {
-        List<BigInteger> fibonaccis = list(big(0), big(1));
-        for (int i = 0; i <= limit; i++)
-            fibonaccis.add(penult(fibonaccis).add(last(fibonaccis)));
+    public static List<Long> fibonaccis(int limit, long mod) {
+        List<Long> fibonaccis = list(0L, 1L);
+        for (int i = 0; i < limit; i++)
+            fibonaccis.add((penult(fibonaccis) + last(fibonaccis)) % mod);
         return fibonaccis;
     }
 
@@ -1491,30 +1491,6 @@ public class EulerLib {
         return new FPolynomial(linearSystem(pows, sequence));
     }
 
-    public static BFraction[] recurrence(Function<Integer, BFraction> f, int minOrder) {
-        Map<Integer, BFraction> fCache = map();
-        Function<Integer, BFraction[]> tryRecurrence = l -> {
-            BFraction[][] A = new BFraction[l][l];
-            BFraction[] B = new BFraction[l];
-            for (int i = 0; i < l; i++) {
-                for (int j = 0; j < l; j++)
-                    A[i][j] = fCache.computeIfAbsent(i + j, f);
-                B[i] = fCache.computeIfAbsent(i + l, f);
-            }
-            BFraction[] recurrence = linearSystem(A, B);
-            BFraction expected = BFraction.integer(0);
-            for (int i = 0; i < l; i++)
-                expected = expected.add(recurrence[i].multiply(fCache.computeIfAbsent(l + i, f)));
-            if (expected.equals(fCache.computeIfAbsent(2 * l, f)))
-                return recurrence;
-            return null;
-        };
-        int l = minOrder;
-        while (tryRecurrence.apply(l) == null)
-            l++;
-        return tryRecurrence.apply(l);
-    }
-
     public static long[][] mult(long[][] A, long[][] B, long mod) {
         long[][] res = new long[A.length][B[0].length];
         if (A.length * fsq(mod) < Long.MAX_VALUE) {
@@ -1550,53 +1526,6 @@ public class EulerLib {
                 res = mult(res, A, mod);
         }
         return res;
-    }
-
-    /**
-     * Given a function f that obeys an unknown recurrence relation f(k) = c_1 f(k-1) + c_2 f(k-2) +
-     * ... + c_l f(k-l) where l ≥ minOrder, returns a function that can compute f(n) in O(l + log n)
-     * time in the given modulus. Uses the Berlekamp Massey algorithm and runs in O(l⁴) time.
-     */
-    public static Function<Long, Long> extrapolation(Function<Integer, BigInteger> f, int minOrder, long mod) {
-        BFraction[] recurrence = recurrence(n -> BFraction.integer(f.apply(n)), minOrder);
-        int l = recurrence.length;
-        long[][] A = new long[l][l];
-        for (int i = 0; i < l; i++) {
-            if (i > 0)
-                A[i - 1][i] = 1;
-            A[l - 1][i] = recurrence[i].toBigInteger().remainder(big(mod)).longValue();
-        }
-        return index -> {
-            long[][] pow = pow(A, index, mod);
-            long res = 0;
-            for (int i = 0; i < l; i++) {
-                res += pow[0][i] * f.apply(i).remainder(big(mod)).longValue();
-                res %= mod;
-            }
-            return res;
-        };
-    }
-
-    /**
-     * Given a function f that is an unknown polynomial function with the given order l, returns a
-     * function that can compute f(n) in O(l) time. This function uses the Berlekamp-Massey
-     * algorithm and runs in O(l²) time.
-     */
-    public static Function<BigInteger, BigInteger> polynomialExtrapolation(Function<Integer, BigInteger> f, int order) {
-        BigInteger[][] diffs = new BigInteger[order + 1][order + 1];
-        for (int j = 0; j <= order; j++)
-            diffs[0][j] = f.apply(j);
-        for (int i = 1; i <= order; i++)
-            for (int j = 0; j <= order - i; j++)
-                diffs[i][j] = diffs[i - 1][j + 1].subtract(diffs[i - 1][j]);
-        return index -> {
-            BigInteger nCr = big(1), res = diffs[0][0];
-            for (int i = 1; i <= order; i++) {
-                nCr = nCr.multiply(index.subtract(big(i - 1))).divide(big(i));
-                res = res.add(nCr.multiply(diffs[i][0]));
-            }
-            return res;
-        };
     }
 
     /*********************************************************************************
