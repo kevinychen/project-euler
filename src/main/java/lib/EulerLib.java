@@ -1531,6 +1531,27 @@ public class EulerLib {
         return res;
     }
 
+    public static long[] pow2x2(long[] A, long b, long mod) {
+        long a0 = A[0], a1 = A[1], a2 = A[2], a3 = A[3];
+        long[] X = {1, 0, 0, 1};
+        while (b > 0) {
+            if (b % 2 == 1) {
+                long x0 = X[0], x1 = X[1], x2 = X[2], x3 = X[3];
+                X[0] = mod(a0 * x0 + a1 * x2, mod);
+                X[1] = mod(a0 * x1 + a1 * x3, mod);
+                X[2] = mod(a2 * x0 + a3 * x2, mod);
+                X[3] = mod(a2 * x1 + a3 * x3, mod);
+            }
+            long aa0 = a0, aa1 = a1, aa2 = a2, aa3 = a3;
+            a0 = (aa0 * aa0 + aa1 * aa2) % mod;
+            a1 = (aa0 * aa1 + aa1 * aa3) % mod;
+            a2 = (aa2 * aa0 + aa3 * aa2) % mod;
+            a3 = (aa2 * aa1 + aa3 * aa3) % mod;
+            b /= 2;
+        }
+        return X;
+    }
+
     /*********************************************************************************
      * GEOMETRY.
      *********************************************************************************/
