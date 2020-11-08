@@ -1,0 +1,172 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath "com.google.guava:guava:27.1-jre";
+        classpath "org.jsoup:jsoup:1.12.2";
+    }
+}
+
+import com.google.common.io.CharStreams
+import groovy.swing.SwingBuilder
+import java.awt.GraphicsEnvironment
+import java.awt.Point
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.util.concurrent.ConcurrentHashMap
+import javax.swing.WindowConstants
+import org.jsoup.Jsoup
+
+final HOST = 'https://projecteuler.net';
+
+/**
+ * Fetch the answers for all problems that the user has solved and write them to answers.txt.
+ */
+task fetchAnswers() << {
+    // First visit the sign in page to get a PHPSESSID
+    def connection = new URL("$HOST/sign_in").openConnection();
+    def setCookieHeader = connection.getHeaderField('Set-cookie');
+    def phpSessId = HttpCookie.parse(setCookieHeader).find { cookie -> cookie.getName() == 'PHPSESSID' }.getValue();
+    def csrfToken = Jsoup.parse(connection.getInputStream(), 'UTF-8', HOST)
+        .select('form[name=sign_in_form] input[name=csrf_token]')
+        .attr('value');
+    System.out.println(csrfToken);
+
+    // Generate a new CAPTCHA for the session
+    def tempCaptchaImage = File.createTempFile('project-euler-captcha', '.png');
+    connection = new URL("$HOST/captcha/show_captcha.php?${Math.random()}").openConnection();
+    connection.setRequestProperty('Cookie', "PHPSESSID=$phpSessId");
+    tempCaptchaImage.withOutputStream { out ->
+        out << connection.getInputStream();
+    }
+
+    // Prompt the user for the username, password, and CAPTCHA value
+    def username, password, captcha;
+    new SwingBuilder().edt {
+        dialog(
+                modal: true,
+                title: 'Sign In',
+                alwaysOnTop: true,
+                resizable: false,
+                pack: true,
+                show: true,
+                defaultCloseOperation: WindowConstants.DISPOSE_ON_CLOSE,
+              ) {
+            vbox {
+                def usernameInput, passwordInput, captchaInput;
+                hbox {
+                    label(text: 'Username: ');
+                    usernameInput = textField(columns: 7);
+                }
+                hbox {
+                    label(text: 'Password: ');
+                    passwordInput = passwordField(columns: 7);
+                }
+                hbox {
+                    label(text: 'Confirmation Code: ');
+                    captchaInput = textField(columns: 7);
+                }
+                hbox {
+                    label(icon: imageIcon(tempCaptchaImage.getPath()))
+                }
+                hbox {
+                    button(
+                            defaultButton: true,
+                            text: 'OK',
+                            actionPerformed: {
+                            username = usernameInput.text;
+                            password = passwordInput.password;
+                            captcha = captchaInput.text;
+                            dispose();
+                            },
+                          )
+                }
+            }
+
+            current.pack();
+            Point centerPoint = GraphicsEnvironment.localGraphicsEnvironment.centerPoint;
+            current.location = new Point(
+                    (int) (centerPoint.x - current.width * 0.5),
+                    (int) (centerPoint.y - current.height * 0.5));
+        }
+    }
+    tempCaptchaImage.delete();
+    if (!username || !password || !captcha)
+        throw new GradleException('Credentials not fully provided. Please try again.');
+
+    // Sign in to Project Euler with the credentials
+    System.out.println("Signing in to ${HOST}...");
+    connection = new URL("$HOST/sign_in").openConnection();
+    connection.setDoOutput(true);
+    connection.setRequestMethod('POST');
+    connection.setRequestProperty('Content-type', 'application/x-www-form-urlencoded');
+    connection.setRequestProperty('Cookie', "PHPSESSID=$phpSessId");
+    System.out.println(phpSessId);
+    System.out.println("csrf_token=${URLEncoder.encode(csrfToken)}"
+            + "&username=${URLEncoder.encode(username)}"
+            + "&password=${URLEncoder.encode(new String(password))}"
+            + "&captcha=$captcha"
+            + "&sign_in=Sign+In");
+    new DataOutputStream(connection.getOutputStream()).withCloseable { out ->
+        out.write(("csrf_token=${URLEncoder.encode(csrfToken)}"
+                + "&username=${URLEncoder.encode(username)}"
+                + "&password=${URLEncoder.encode(new String(password))}"
+                + "&captcha=$captcha"
+                + "&sign_in=Sign+In").getBytes('UTF-8'));
+    }
+    System.out.println(connection.getHeaderFields());
+    System.out.println(connection.getURL());
+    setCookieHeader = connection.getHeaderField('Set-cookie');
+    System.out.println(phpSessId);
+    System.out.println(connection.getResponseCode());
+    phpSessId = HttpCookie.parse(setCookieHeader).find { cookie -> cookie.getName() == 'PHPSESSID' }.getValue();
+    System.out.println(CharStreams.toString(new InputStreamReader(connection.getInputStream(), 'UTF-8')));
+    connection.disconnect();
+    System.out.println(phpSessId);
+    Thread.sleep(2000);
+
+    // Parse all solved problems from the progress page. Each one looks like:
+    //
+    // <td class="problem_solved">
+    //   <a href="problem=1">
+    //     ...
+    //   </a>
+    // </td>
+    def solvedProblems = Jsoup.connect("$HOST/progress").cookie('PHPSESSID', phpSessId).get()
+        .select('.problem_solved a')
+        .collect({ el -> el.attr('href').with { href -> Integer.parseInt(href.split('=')[1]) } });
+    if (solvedProblems.isEmpty())
+        throw new GradleException('No solved problems found. You may have supplied the wrong credentials. Please try again.');
+    System.out.println("Fetching answers to ${solvedProblems.size()} solved problems.");
+    solvedProblems = solvedProblems.subList(0, 5);
+
+
+    // There is no batch API to fetch answers, so visit all problem pages in parallel.
+    // Each page has an answer box that looks like:
+    //
+    // <table class="table_center">
+    //   <tbody><tr><td>
+    //     <b>Answer</b>
+    //   </td></tr></tbody>
+    // </table>
+    def answers = new ConcurrentHashMap<>();
+    solvedProblems.parallelStream().forEach { problem ->
+        def answer = Jsoup.connect("$HOST/problem=$problem").cookie('PHPSESSID', phpSessId).get()
+            .select('.table_center b')
+            .text();
+        if (!answer) {
+            System.err.println("Failed to get answer for problem ${problem}.");
+            return;
+        }
+        answers.put(problem, answer);
+    }
+
+    // Write to answers.txt file
+    Collections.sort(solvedProblems);
+    def lines = [];
+    solvedProblems.forEach { problem -> lines.add("$problem. ${answers[problem]}") }
+    Files.write(Paths.get('answers.txt'), lines);
+}
+

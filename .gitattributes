@@ -1,0 +1,1 @@
+src/test/java/*/p*.java filter=euler diff=euler merge=binary

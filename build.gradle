@@ -6,6 +6,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply from: "${rootDir}/gradle/setup.gradle"
 
 sourceCompatibility = 1.8
 
@@ -19,21 +20,5 @@ dependencies {
     compile "org.jacop:jacop:4.7.0"
     compile "org.projectlombok:lombok:1.16.12"
     testCompile "junit:junit:4.12"
-}
-
-apply from: "${rootDir}/gradle/encryption.gradle"
-
-/*
- * Create JAR file: ./gradlew jar -Ptest=level01.p001
- * Run JAR file: java -jar build/libs/euler.jar
- */
-jar {
-    from sourceSets.test.output
-    manifest {
-        attributes 'Main-Class': test
-    }
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
 }
 

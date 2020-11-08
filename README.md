@@ -29,22 +29,22 @@ Java programs for [Project Euler](https://projecteuler.net). Every solution sati
 
 ## Setup
 
-This repository contains a Gradle task that will decrypt the files for all problems that you have solved. Run the following (requires JDK 8):
-
-    $ ./gradlew decrypt
-
-The task will prompt you to enter your Project Euler credentials. This is only for fetching the answers to your solved problems, in order to decrypt the files; the task does not save any data or make any changes to your account.
-
-If you do not wish to enter your credentials, or you are offline, then you may instead create a file `solutions.txt` in the root directory in the following format (you do not need to include all answers):
+This repository requires Java 8. In order to decrypt the files, you need an `answers.txt` file in the root directory in the following format (you do not need to include all answers):
 
     1. answer to Problem 1
     2. answer to Problem 2
 
-Then run:
+To generate this `answers.txt` file with answers to all of your solved problems, run the following command:
 
-    $ ./gradlew decrypt -Poffline
+    $ ./gradlew fetchAnswers
 
-Decrypted files will be at `src/test/java/levelXX/pXXX.java`.
+The task will prompt you to enter your Project Euler credentials. This is only for fetching the answers to your solved problems, in order to decrypt the files; the task does not save any data or make any changes to your account. If you do not wish to enter your credentials or are offline, you may create the `answers.txt` file manually.
+
+Now run the following:
+
+    $ ./scripts/setup.sh
+
+Files in Git will now be automatically decrypted, and files added to Git will be automatically encrypted.
 
 ## Running tests
 
@@ -67,8 +67,4 @@ This project uses Lombok to easily generate Java data objects. To install Lombok
 To import this project, open Eclipse and click "Import" -> "Existing Projects into Workspace". Select this directory.
 
 To maintain consist style in Eclipse, import the `formatter.xml` file in the root directory of this repository. Under project-specific preferences, select "Java Code Style" -> "Formatter", and import the `formatter.xml` profile.
-
-Encrypt all solution files before committing by running:
-
-    $ ./gradlew encrypt
 

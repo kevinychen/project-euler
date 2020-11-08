@@ -6,6 +6,6 @@
 build
 
 *.swp
-solutions.txt
+answers.txt
 src/test/java/*/p*.java
 
