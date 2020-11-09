@@ -32,7 +32,6 @@ task fetchAnswers() << {
     def csrfToken = Jsoup.parse(connection.getInputStream(), 'UTF-8', HOST)
         .select('form[name=sign_in_form] input[name=csrf_token]')
         .attr('value');
-    System.out.println(csrfToken);
 
     // Generate a new CAPTCHA for the session
     def tempCaptchaImage = File.createTempFile('project-euler-captcha', '.png');
@@ -96,36 +95,22 @@ task fetchAnswers() << {
     if (!username || !password || !captcha)
         throw new GradleException('Credentials not fully provided. Please try again.');
 
-    // Sign in to Project Euler with the credentials
-    System.out.println("Signing in to ${HOST}...");
-    connection = new URL("$HOST/sign_in").openConnection();
-    connection.setDoOutput(true);
-    connection.setRequestMethod('POST');
-    connection.setRequestProperty('Content-type', 'application/x-www-form-urlencoded');
-    connection.setRequestProperty('Cookie', "PHPSESSID=$phpSessId");
-    System.out.println(phpSessId);
-    System.out.println("csrf_token=${URLEncoder.encode(csrfToken)}"
-            + "&username=${URLEncoder.encode(username)}"
-            + "&password=${URLEncoder.encode(new String(password))}"
-            + "&captcha=$captcha"
-            + "&sign_in=Sign+In");
-    new DataOutputStream(connection.getOutputStream()).withCloseable { out ->
-        out.write(("csrf_token=${URLEncoder.encode(csrfToken)}"
-                + "&username=${URLEncoder.encode(username)}"
-                + "&password=${URLEncoder.encode(new String(password))}"
-                + "&captcha=$captcha"
-                + "&sign_in=Sign+In").getBytes('UTF-8'));
+    // Sign in with credentials, and save the new PHPSESSID from the set-cookie header
+    def signInCommand = [
+        'curl',
+        '-i',
+        '-H', 'content-type: application/x-www-form-urlencoded',
+        '-H', "cookie: PHPSESSID=$phpSessId",
+        '-d', "csrf_token=${URLEncoder.encode(csrfToken)}&username=${URLEncoder.encode(username)}&password=${URLEncoder.encode(new String(password))}&captcha=$captcha&sign_in=Sign+In",
+        "$HOST/sign_in"];
+    def signInProcess = signInCommand.execute();
+    signInProcess.waitFor();
+    def m = signInProcess.text =~ /PHPSESSID=([0-9a-f]+);/;
+    if (m) {
+        phpSessId = m.group(1);
+    } else {
+        throw new GradleException('Wrong credentials. Please try again.');
     }
-    System.out.println(connection.getHeaderFields());
-    System.out.println(connection.getURL());
-    setCookieHeader = connection.getHeaderField('Set-cookie');
-    System.out.println(phpSessId);
-    System.out.println(connection.getResponseCode());
-    phpSessId = HttpCookie.parse(setCookieHeader).find { cookie -> cookie.getName() == 'PHPSESSID' }.getValue();
-    System.out.println(CharStreams.toString(new InputStreamReader(connection.getInputStream(), 'UTF-8')));
-    connection.disconnect();
-    System.out.println(phpSessId);
-    Thread.sleep(2000);
 
     // Parse all solved problems from the progress page. Each one looks like:
     //
@@ -137,24 +122,20 @@ task fetchAnswers() << {
     def solvedProblems = Jsoup.connect("$HOST/progress").cookie('PHPSESSID', phpSessId).get()
         .select('.problem_solved a')
         .collect({ el -> el.attr('href').with { href -> Integer.parseInt(href.split('=')[1]) } });
-    if (solvedProblems.isEmpty())
-        throw new GradleException('No solved problems found. You may have supplied the wrong credentials. Please try again.');
-    System.out.println("Fetching answers to ${solvedProblems.size()} solved problems.");
-    solvedProblems = solvedProblems.subList(0, 5);
-
+    System.out.println("Fetching answers to ${solvedProblems.size()} solved problems...");
 
     // There is no batch API to fetch answers, so visit all problem pages in parallel.
     // Each page has an answer box that looks like:
     //
-    // <table class="table_center">
-    //   <tbody><tr><td>
-    //     <b>Answer</b>
-    //   </td></tr></tbody>
-    // </table>
+    // <div id="problem_answer">
+    //   ...
+    //   <span class="strong">Answer</span>
+    //   ...
+    // </div>
     def answers = new ConcurrentHashMap<>();
     solvedProblems.parallelStream().forEach { problem ->
         def answer = Jsoup.connect("$HOST/problem=$problem").cookie('PHPSESSID', phpSessId).get()
-            .select('.table_center b')
+            .select('#problem_answer span.strong')
             .text();
         if (!answer) {
             System.err.println("Failed to get answer for problem ${problem}.");
@@ -168,5 +149,6 @@ task fetchAnswers() << {
     def lines = [];
     solvedProblems.forEach { problem -> lines.add("$problem. ${answers[problem]}") }
     Files.write(Paths.get('answers.txt'), lines);
+    System.out.println("Done.");
 }
 

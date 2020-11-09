@@ -2,7 +2,7 @@
 # 
 # A file to encrypt must be of the form:
 # 
-#    public class p[NUMBER].java {
+#    public class p[NUMBER] {
 #        ...
 #        check([PASSKEY]);
 #        // or check(..., [PASSKEY]);
