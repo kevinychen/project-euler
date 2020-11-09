@@ -7,5 +7,4 @@ build
 
 *.swp
 answers.txt
-src/test/java/*/p*.java
 

@@ -21,17 +21,18 @@
 # passkey from ANSWERS_FILE in order to decrypt the remainder of the file.
 
 NUMBER_REGEX='public class p0*([1-9][0-9]*)'
-PASS_REGEX=' check\((.* )?"?([^ "L]+)["L]?\);'
+PASS_REGEX=' check\(([^'$'\n'']* )?"?([^ "L]+)["L]?\);'
 ANSWERS_FILE="answers.txt"
 
 if [[ $1 == "-d" ]] # decrypt mode
 then
     read -r number
-    pass=$(cat $ANSWERS_FILE | grep "^$number\." | cut -d ' ' -f 2)
+    pass=$(cat $ANSWERS_FILE 2> /dev/null | grep "^$number\." | cut -d ' ' -f 2)
     if [[ $pass ]]
     then
         cat | openssl enc -nosalt -aes-256-cbc -d -pass pass:$pass
     else
+        echo $number
         cat
     fi
     exit
@@ -51,7 +52,7 @@ then
         echo "$number. $pass" >> $ANSWERS_FILE
         sort -g --unique -o $ANSWERS_FILE $ANSWERS_FILE
     else
-        echo "Failed to encrypt file." 1>&2
+        echo "Failed to encrypt file $number." 1>&2
         exit 1
     fi
 fi
