@@ -45,15 +45,26 @@ then
     if [[ $contents =~ $PASS_REGEX ]]
     then
         pass=${BASH_REMATCH[2]}
-        echo $number
-        echo "$contents" | openssl enc -nosalt -aes-256-cbc -pass pass:$pass
 
-        # add encryption password to answers file
-        echo "$number. $pass" >> $ANSWERS_FILE
-        sort -g --unique -o $ANSWERS_FILE $ANSWERS_FILE
+        expectedPass=$(cat $ANSWERS_FILE 2> /dev/null | grep "^$number\." | cut -d ' ' -f 2)
+        if [[ $expectedPass ]]
+        then
+            if [[ $expectedPass != $pass ]]
+            then
+                echo "Passkey in code does not match passkey in $ANSWERS_FILE." 1>&2
+                exit 0
+            fi
+        else
+            # add encryption password to answers file
+            echo "$number. $pass" >> $ANSWERS_FILE
+            sort -g --unique -o $ANSWERS_FILE $ANSWERS_FILE
+        fi
+
+        echo $number
+        echo "${contents//\\/\\\\}" | openssl enc -nosalt -aes-256-cbc -pass pass:$pass
     else
         echo "Failed to encrypt file $number." 1>&2
-        exit 1
+        exit 0
     fi
 fi
 
