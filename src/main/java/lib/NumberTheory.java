@@ -115,6 +115,10 @@ public class NumberTheory extends EulerLib {
         return sumFloorQuotients;
     }
 
+    public static QuotientValues numPrimes(long n) {
+        return sumPrimePowers(n, 0, Long.MAX_VALUE);
+    }
+
     /**
      * Returns sum_{p=1}^l p^exp, for all l = ⌊n/k⌋. Runs in time O(n^(3/4)).
      */
@@ -132,11 +136,13 @@ public class NumberTheory extends EulerLib {
             for (int i = 1; i <= L && n / i >= sq(p); i++) {
                 long ip = (long) i * p;
                 big[i] -= pp * ((ip <= L ? big[(int) ip] : small[(int) (n / ip)]) - small[p - 1]);
-                big[i] %= mod;
+                if (mod != Long.MAX_VALUE)
+                    big[i] %= mod;
             }
             for (int i = (int) (n / L); --i >= sq(p);) {
                 small[i] -= pp * (small[i / p] - small[p - 1]);
-                small[i] %= mod;
+                if (mod != Long.MAX_VALUE)
+                    small[i] %= mod;
             }
         }
         return new QuotientValues(n, big, small);
