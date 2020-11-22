@@ -124,7 +124,6 @@ public class NumberTheory extends EulerLib {
      */
     public static QuotientValues sumPrimePowers(long n, int exp, long mod) {
         int L = isqrt(n);
-        preff(L);
         long[] big = new long[L + 1];
         long[] small = new long[(int) (n / L)];
         for (int i = 1; i <= L; i++)

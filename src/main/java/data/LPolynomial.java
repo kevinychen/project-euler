@@ -56,7 +56,7 @@ public class LPolynomial {
     }
 
     public LPolynomial multiply(LPolynomial other, long mod) {
-        if (this.coefficients.length * other.coefficients.length <= 10000)
+        if (this.coefficients.length * other.coefficients.length <= 1000)
             return multiplyHelper(other, mod);
 
         int k = Math.max(this.coefficients.length, other.coefficients.length) / 2;
