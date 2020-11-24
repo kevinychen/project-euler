@@ -41,7 +41,7 @@ public class Algebra extends EulerLib {
 
     /**
      * Assuming that S(n) satisfies a linear recurrence (mod m) with order k ≥ minOrder, returns a
-     * function that can evaluate S(n) in O(k³ log(n)). Runs in time O(k²).
+     * function that can evaluate S(n) in O(k² log(n)). Runs in time O(k²).
      */
     public static Function<Long, Long> extrapolation(Function<Integer, Long> S, int minOrder, long m) {
         Map<Long, Integer> primeFactors = lprimeFactor(m);
@@ -49,10 +49,9 @@ public class Algebra extends EulerLib {
         Map<Integer, Long> cache = map();
         primeFactors.forEach((p, e) -> recurrences.put(p, recurrence(n -> cache.computeIfAbsent(n, S), minOrder, p, e)));
         int k = recurrences.values().stream().mapToInt(LPolynomial::degree).max().getAsInt();
-        long[][] A = new long[k][k];
+        long[] A = new long[k + 1];
+        A[k] = 1;
         for (int i : range(k)) {
-            if (i > 0)
-                A[i - 1][i] = 1;
             List<Long> as = list();
             List<Long> ms = list();
             primeFactors.forEach((p, e) -> {
@@ -60,15 +59,15 @@ public class Algebra extends EulerLib {
                 as.add(k - i <= recurrence.degree() ? -recurrence.coefficients[k - i] : 0);
                 ms.add(pow(p, e));
             });
-            A[k - 1][i] = crt(as, ms);
+            A[i] = -crt(as, ms);
         }
         return index -> {
-            if (index < cache.size())
-                return cache.get(index.intValue());
-            long[][] pow = pow(A, index - (cache.size() - k), m);
+            if (index < cache.size() - k)
+                return S.apply(index.intValue());
+            long[] coeffs = new LPolynomial(0, 1).pow(index - (cache.size() - k), new LPolynomial(A), m).coefficients;
             long res = 0;
-            for (int i = 0; i < k; i++) {
-                res += pow[0][i] * cache.get(i + cache.size() - k);
+            for (int i = 0; i < coeffs.length; i++) {
+                res += coeffs[i] * cache.get(i + cache.size() - k);
                 res %= m;
             }
             return res;

@@ -1,7 +1,9 @@
 
 package data;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import lombok.Data;
 
@@ -92,18 +94,40 @@ public class LPolynomial {
 
         long[] dividend = Arrays.copyOf(coefficients, coefficients.length);
         int m = other.coefficients.length;
+
+        List<Integer> nonzeroIndices = new ArrayList<>();
+        for (int i = 0; i < m; i++)
+            if (other.coefficients[i] != 0)
+                nonzeroIndices.add(i);
+
         long[] newCoefficients = new long[coefficients.length - m + 1];
         for (int i = dividend.length - m; i >= 0; i--) {
             long q = dividend[i + m - 1] / other.coefficients[m - 1];
             if (q == 0)
                 continue;
             newCoefficients[i] = q;
-            for (int j = 0; j < m; j++) {
-                dividend[j + i] -= other.coefficients[j] * q;
-                dividend[j + i] %= mod;
-            }
+            if (nonzeroIndices.size() < m / 2)
+                for (int j : nonzeroIndices) {
+                    dividend[j + i] -= other.coefficients[j] * q;
+                    dividend[j + i] %= mod;
+                }
+            else
+                for (int j = 0; j < m; j++) {
+                    dividend[j + i] -= other.coefficients[j] * q;
+                    dividend[j + i] %= mod;
+                }
         }
         return new LPolynomial[] { new LPolynomial(newCoefficients), new LPolynomial(dividend) };
+    }
+
+    public LPolynomial pow(long e, LPolynomial mod1, long mod2) {
+        if (e == 0)
+            return new LPolynomial(1);
+        LPolynomial res = pow(e / 2, mod1, mod2);
+        res = res.multiply(res, mod2).divideAndRemainder(mod1, mod2)[1];
+        if (e % 2 != 0)
+            res = res.multiply(this, mod2).divideAndRemainder(mod1, mod2)[1];
+        return res;
     }
 
     public LPolynomial gcd(LPolynomial other, long mod) {
