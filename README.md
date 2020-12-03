@@ -18,7 +18,7 @@ Java programs for [Project Euler](https://projecteuler.net). Every solution sati
 | 12 | 276 to 300 | 28.8 seconds |
 | 13 | 301 to 325 | 21.9 seconds |
 | 14 | 326 to 350 | 25.2 seconds |
-| 15 | 351 to 375 | 41.6 seconds |
+| 15 | 351 to 375 | 32.6 seconds |
 | 16 | 376 to 400 | 30.7 seconds |
 | 17 | 401 to 425 | 100.1 seconds |
 | 18 | 426 to 450 | 80.2 seconds |
