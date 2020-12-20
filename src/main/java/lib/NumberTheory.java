@@ -121,6 +121,9 @@ public class NumberTheory extends EulerLib {
 
     /**
      * Returns sum_{p=1}^l p^exp, for all l = ⌊n/k⌋. Runs in time O(n^(3/4)).
+     * <p>
+     * Uses the Sieve of Eratosthenes, but only on ranges up to ⌊n/k⌋ for integer k. After
+     * processing each prime p, we get the integers > 1 relatively prime to all numbers up to p.
      */
     public static QuotientValues sumPrimePowers(long n, int exp, long mod) {
         int L = isqrt(n);
