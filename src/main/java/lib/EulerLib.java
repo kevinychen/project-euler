@@ -400,6 +400,13 @@ public class EulerLib {
         return logX + Math.log(1 + Math.exp(logY - logX));
     }
 
+    /**
+     * Fast (but unchecked) version of {@link Math#hypot}.
+     */
+    public static double hypot(double a, double b) {
+        return Math.sqrt(a * a + b * b);
+    }
+
     /*********************************************************************************
      * AD HOC FUNCTIONS.
      *********************************************************************************/
