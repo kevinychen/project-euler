@@ -980,6 +980,8 @@ public class EulerLib {
     }
 
     public static long nCr(long a, long b, long pmod) {
+        if (b < 0 || a < b)
+            return 0;
         long nCr = 1;
         for (long n = a, r = b; r > 0; n /= pmod, r /= pmod)
             for (int i = 0; i < r % pmod; i++) {
