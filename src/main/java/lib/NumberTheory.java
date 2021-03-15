@@ -93,7 +93,15 @@ public class NumberTheory extends EulerLib {
     }
 
     public static long sumFloorQuotients(long n, long limit) {
-        return sumFloorQuotients(n, 0, limit, Long.MAX_VALUE);
+        if (limit <= 0)
+            return 0;
+        int L = isqrt(n);
+        long sumFloorQuotients = 0;
+        for (int k = 1; k <= limit && k <= n / L; k++)
+            sumFloorQuotients += n / k;
+        for (long q = n / limit; q < L; q++)
+            sumFloorQuotients += (Math.min(n / q, limit) - n / (q + 1)) * q;
+        return sumFloorQuotients;
     }
 
     /**
