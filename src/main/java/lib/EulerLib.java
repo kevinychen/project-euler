@@ -1581,4 +1581,16 @@ public class EulerLib {
             area += points[i].cross(points[(i + 1) % points.length]);
         return Math.abs(area);
     }
+
+    /**
+     * Use Simpson's Rule to efficiently integrate the given function within the provided bounds.
+     */
+    public static double integrate(Function<Double, Double> f, double low, double high, int numParts) {
+        double integral = f.apply(low) + f.apply(high);
+        for (int i = 1; i < numParts; i += 2)
+            integral += 4 * f.apply(low + (high - low) / numParts * i);
+        for (int i = 2; i < numParts; i += 2)
+            integral += 2 * f.apply(low + (high - low) / numParts * i);
+        return integral * (high - low) / (3 * numParts);
+    }
 }
