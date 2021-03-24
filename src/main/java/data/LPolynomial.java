@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import lib.EulerLib;
 import lombok.Data;
 
 @Data
@@ -60,6 +61,9 @@ public class LPolynomial {
     public LPolynomial multiply(LPolynomial other, long mod) {
         if (this.coefficients.length * other.coefficients.length <= 1000)
             return multiplyHelper(other, mod);
+
+        if (Long.lowestOneBit(mod - 1) >= coefficients.length + other.coefficients.length && EulerLib.isProbablePrime(mod))
+            return new LPolynomial(multiply(coefficients, other.coefficients, mod));
 
         int k = Math.max(this.coefficients.length, other.coefficients.length) / 2;
 
@@ -148,5 +152,74 @@ public class LPolynomial {
         for (int i = 0; i < newCoefficients.length; i++)
             newCoefficients[i] = coefficients[i + shift];
         return new LPolynomial(newCoefficients);
+    }
+
+    /**
+     * Multiply the coefficient arrays using discrete FFT in O(n log n) time. Based on
+     * https://cp-algorithms.com/algebra/fft.html.
+     */
+    private static long[] multiply(long[] a, long[] b, long pmod) {
+        int n = 1;
+        while (n < a.length + b.length)
+            n <<= 1;
+        long[] fa = new long[n];
+        long[] fb = new long[n];
+        for (int i = 0; i < a.length; i++)
+            fa[i] = a[i];
+        for (int i = 0; i < b.length; i++)
+            fb[i] = b[i];
+
+        fft(fa, false, pmod);
+        fft(fb, false, pmod);
+        for (int i = 0; i < n; i++) {
+            fa[i] *= fb[i];
+            fa[i] %= pmod;
+        }
+        fft(fa, true, pmod);
+        return fa;
+    }
+
+    private static void fft(long[] a, boolean invert, long pmod) {
+        int e = Long.numberOfTrailingZeros(pmod - 1);
+        long root = EulerLib.pow(EulerLib.generator(pmod), pmod >> e, pmod);
+        long root_1 = EulerLib.modInv(root, pmod);
+        long root_pw = 1 << e;
+
+        int n = a.length;
+
+        for (int i = 1, j = 0; i < n; i++) {
+            int bit = n >> 1;
+            for (; (j & bit) > 0; bit >>= 1)
+                j ^= bit;
+            j ^= bit;
+
+            if (i < j) {
+                long temp = a[i];
+                a[i] = a[j];
+                a[j] = temp;
+            }
+        }
+
+        for (int len = 2; len <= n; len <<= 1) {
+            long wlen = invert ? root_1 : root;
+            for (int i = len; i < root_pw; i <<= 1)
+                wlen = wlen * wlen % pmod;
+
+            for (int i = 0; i < n; i += len) {
+                long w = 1;
+                for (int j = 0; j < len / 2; j++) {
+                    long u = a[i + j], v = a[i + j + len / 2] * w % pmod;
+                    a[i + j] = u + v < pmod ? u + v : u + v - pmod;
+                    a[i + j + len / 2] = u - v >= 0 ? u - v : u - v + pmod;
+                    w = w * wlen % pmod;
+                }
+            }
+        }
+
+        if (invert) {
+            long n_1 = EulerLib.modInv(n, pmod);
+            for (int i = 0; i < n; i++)
+                a[i] = a[i] * n_1 % pmod;
+        }
     }
 }
