@@ -1352,6 +1352,18 @@ public class EulerLib {
         return 0.57721566490153286 + Math.log(n) + 1 / (2 * n) - 1 / (12 * fsq(n)) + 1 / (120 * Math.pow(n, 4));
     }
 
+    /**
+     * @return number of positive integers k <= {@link limit} relatively prime to {@link n}.
+     */
+    public static long numRelativelyPrime(int n, long limit) {
+        if (n == 1)
+            return limit;
+        int d = ff[n];
+        while (n % d == 0)
+            n /= d;
+        return numRelativelyPrime(n, limit) - numRelativelyPrime(n, limit / d);
+    }
+
     /*********************************************************************************
      * BASIC DATA STRUCTURES.
      *********************************************************************************/
