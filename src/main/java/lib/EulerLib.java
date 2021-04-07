@@ -925,6 +925,10 @@ public class EulerLib {
         return gcds;
     }
 
+    public static int ilcm(int a, int b) {
+        return a / igcd(a, b) * b;
+    }
+
     public static long lcm(long a, long b) {
         return a / gcd(a, b) * b;
     }
@@ -1114,6 +1118,10 @@ public class EulerLib {
     public static LPoint linComb(long a, long b, long c) {
         LPoint linComb = linComb(a, b);
         return linComb.multiply(c / (a * linComb.x + b * linComb.y));
+    }
+
+    public static int imodInv(int n, int mod) {
+        return imod(linComb(n, mod).x, mod);
     }
 
     public static long modInv(long n, long mod) {
