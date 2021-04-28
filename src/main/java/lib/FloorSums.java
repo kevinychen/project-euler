@@ -158,7 +158,7 @@ public class FloorSums extends EulerLib {
      * if minusEpsilon is true, where e is an infinitesimally small number.
      */
     private long sumPowers(long n, ContinuedFraction f, int k, int j, boolean minusEpsilon) {
-        return cache.computeIfAbsent(new Key(n, f, k, j, minusEpsilon), key -> {
+        return memoize(cache, new Key(n, f, k, j, minusEpsilon), key -> {
             if (n == 0)
                 return 0L;
             if (j == 0)

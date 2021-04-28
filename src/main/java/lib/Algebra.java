@@ -47,7 +47,7 @@ public class Algebra extends EulerLib {
         Map<Long, Integer> primeFactors = lprimeFactor(m);
         Map<Long, LPolynomial> recurrences = map();
         Map<Integer, Long> cache = map();
-        primeFactors.forEach((p, e) -> recurrences.put(p, recurrence(n -> cache.computeIfAbsent(n, S), minOrder, p, e)));
+        primeFactors.forEach((p, e) -> recurrences.put(p, recurrence(n -> memoize(cache, n, S), minOrder, p, e)));
         int k = recurrences.values().stream().mapToInt(LPolynomial::degree).max().getAsInt();
         long[] A = new long[k + 1];
         A[k] = 1;

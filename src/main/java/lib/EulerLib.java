@@ -99,6 +99,12 @@ public class EulerLib {
         }
     }
 
+    public static <K, V> V memoize(Map<K, V> cache, K key, Function<K, V> f) {
+        if (!cache.containsKey(key))
+            cache.put(key, f.apply(key));
+        return cache.get(key);
+    }
+
     public static String join(List<?> objs) {
         return join(objs, "");
     }
