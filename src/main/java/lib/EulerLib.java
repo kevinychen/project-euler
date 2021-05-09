@@ -34,7 +34,6 @@ import data.FPolynomial;
 import data.LFraction;
 import data.LPoint;
 import data.LTriangle;
-import data.QuotientValues;
 import one.util.streamex.EntryStream;
 
 /**
@@ -1311,52 +1310,24 @@ public class EulerLib {
         return primeCounts;
     }
 
-    public static long[] isSquareFree;
-    public static QuotientValues numSquareFrees;
+    public static boolean[] isSquareFree;
 
     public static boolean isSquareFree(long n) {
         if (isSquareFree != null)
-            return (isSquareFree[(int) (n / 64)] & (1L << (n % 64))) != 0;
+            return isSquareFree[(int) n];
         for (int d = 2; sq(d) <= n; d++)
             if (isPrime(d) && n % sq(d) == 0)
                 return false;
         return true;
     }
 
-    public static void preSquareFrees(long n) {
-        preSquareFrees(n, Integer.MAX_VALUE);
-    }
-
-    /**
-     * Initializes isSquareFree and numSquareFrees so that:
-     * <ul>
-     * <li>the i % 64 bit of isSquareFree[i / 64] represents whether i is square free for 1 ≤ i &lt;
-     * n^{3/4}</li>
-     * <li>numSquareFrees contains the number of square free numbers up to l for all l = ⌊n/k⌋.</li>
-     * </ul>
-     * Runs in time O(n^(3/4)).
-     */
-    public static void preSquareFrees(long n, int numSquareFreesSmallLimit) {
-        long L = (long) Math.pow(n, 3. / 4);
-        int L2 = (int) (n / L);
-
-        isSquareFree = new long[(int) (L / 64 + 2)];
-        for (int i = 0; i < isSquareFree.length; i++)
-            isSquareFree[i] = 0xeeeeeeeeeeeeeeeeL;
-        for (int p : primes(3, isqrt(L)))
-            for (long i = sq(p); i <= L; i += sq(p))
-                isSquareFree[(int) (i / 64)] &= ~(1L << (i % 64));
-
-        long[] small = new long[(int) Math.min(L, numSquareFreesSmallLimit) + 1];
-        for (int i = 1; i < small.length; i++)
-            small[i] = small[i - 1] + (isSquareFree(i) ? 1 : 0);
-
-        preMobius(isqrt(n));
-        long[] big = new long[L2 + 1];
-        for (int i = 1; i <= L2; i++)
-            big[i] = numSquareFree(n / i);
-
-        numSquareFrees = new QuotientValues(n, big, small);
+    public static void preSquareFrees(int n) {
+        isSquareFree = new boolean[n + 1];
+        for (int i = 1; i <= n; i++)
+            isSquareFree[i] = true;
+        for (int p : primes(isqrt(n)))
+            for (int i = isq(p); i <= n; i += sq(p))
+                isSquareFree[i] = false;
     }
 
     /**

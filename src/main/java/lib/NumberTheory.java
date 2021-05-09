@@ -219,6 +219,29 @@ public class NumberTheory extends EulerLib {
     }
 
     /**
+     * Returns the number of square-free values up to ⌊n/k⌋ for all k. Runs in time O(n^{2/3}).
+     */
+    public static QuotientValues numSquareFrees(long n) {
+        int L = (int) Math.cbrt(n);
+        int L2 = (int) (n / L);
+        preSquareFrees(L2);
+
+        long[] big = new long[L];
+        long[] small = new long[L2 + 1];
+        for (int i = 1; i <= L2; i++)
+            small[i] = small[i - 1] + (isSquareFree(i) ? 1 : 0);
+        for (int i = L; --i >= 1;) {
+            big[i] = n / i;
+            int lim = (int) Math.cbrt(n / i);
+            for (int k = 2; sq(k) <= n / i / lim; k++)
+                big[i] -= i * sq(k) < L ? big[i * isq(k)] : small[(int) (n / i / sq(k))];
+            for (int t = 1; t < lim; t++)
+                big[i] -= (isqrt(n / i / t) - isqrt(n / i / (t + 1))) * small[t];
+        }
+        return new QuotientValues(n, big, small);
+    }
+
+    /**
      * Given the prime factors of n (with multiplicity), returns all points x,y ≥ 0 such that x²+y²
      * = n.
      */
