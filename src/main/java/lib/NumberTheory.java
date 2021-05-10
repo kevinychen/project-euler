@@ -92,6 +92,14 @@ public class NumberTheory extends EulerLib {
         return numTriplets;
     }
 
+    public static long sumFloorQuotients(long n) {
+        int L = isqrt(n);
+        long sumFloorQuotients = 0;
+        for (int k = 1; k <= L; k++)
+            sumFloorQuotients += n / k - k;
+        return 2 * sumFloorQuotients + L;
+    }
+
     public static long sumFloorQuotients(long n, long limit) {
         if (limit <= 0)
             return 0;
