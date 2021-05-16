@@ -1232,7 +1232,7 @@ public class EulerLib {
     }
 
     /**
-     * Returns an polynomial C(n) = C[0] + C[1] n + C[2] n² + ... C[e+1] n^{e+1} such that C(n) =
+     * Returns a polynomial C(n) = C[0] + C[1] n + C[2] n² + ... C[e+1] n^{e+1} such that C(n) =
      * sum_{k=1}^n k^e.
      */
     public static LFraction[] sumPowerCoefficients(int e) {
