@@ -15,10 +15,15 @@ public class BIT {
     }
 
     public void add(int k, long v) {
+        if (v < 0 || v >= M) {
+            v %= M;
+            if (v < 0)
+                v += M;
+        }
         for (; k < table.length; k += k & -k) {
             table[k] += v;
-            if (M != Long.MAX_VALUE)
-                table[k] %= M;
+            if (table[k] >= M)
+                table[k] -= M;
         }
     }
 
@@ -29,8 +34,8 @@ public class BIT {
         long sum = 0;
         for (; k > 0; k -= k & -k) {
             sum += table[k];
-            if (M != Long.MAX_VALUE)
-                sum %= M;
+            if (sum >= M)
+                sum -= M;
         }
         return sum;
     }
