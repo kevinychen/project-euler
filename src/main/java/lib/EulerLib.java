@@ -20,6 +20,7 @@ import java.util.function.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.BiMap;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Lists;
@@ -69,6 +70,8 @@ public class EulerLib {
             return join(Arrays.asList((char[][]) o), "\n");
         else if (o instanceof Object[])
             return Arrays.toString((Object[]) o);
+        else if (o instanceof Collection)
+            return Collections2.transform((Collection<?>) o, EulerLib::toString).toString();
         return o + "";
     }
 
