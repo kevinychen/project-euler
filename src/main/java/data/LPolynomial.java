@@ -92,6 +92,17 @@ public class LPolynomial {
         return new LPolynomial(newCoefficients);
     }
 
+    public LPolynomial reciprocal(long mod) {
+        if (degree() == 0)
+            return new LPolynomial(EulerLib.modInv(coefficients[0], mod));
+        LPolynomial x = capTo(degree() / 2).reciprocal(mod);
+        return x.multiply(2, mod).subtract(multiply(x, mod).multiply(x, mod), mod).capTo(degree());
+    }
+
+    public LPolynomial divide(LPolynomial other, long mod) {
+        return multiply(other.reciprocal(mod), mod);
+    }
+
     public LPolynomial[] divideAndRemainder(LPolynomial other, long mod) {
         if (degree() < other.degree())
             return new LPolynomial[] { ZERO, this };
@@ -152,6 +163,25 @@ public class LPolynomial {
         for (int i = 0; i < newCoefficients.length; i++)
             newCoefficients[i] = coefficients[i + shift];
         return new LPolynomial(newCoefficients);
+    }
+
+    public LPolynomial derivative(long mod) {
+        long[] newCoefficients = new long[coefficients.length - 1];
+        for (int i = 0; i < newCoefficients.length; i++)
+            newCoefficients[i] = coefficients[i + 1] * (i + 1) % mod;
+        return new LPolynomial(newCoefficients);
+    }
+
+    public LPolynomial integral(long pmod) {
+        long[] newCoefficients = new long[coefficients.length + 1];
+        long[] modInvs = EulerLib.modInvs(newCoefficients.length, pmod);
+        for (int i = 1; i < newCoefficients.length; i++)
+            newCoefficients[i] = coefficients[i - 1] * modInvs[i] % pmod;
+        return new LPolynomial(newCoefficients);
+    }
+
+    public LPolynomial capTo(int maxDegree) {
+        return new LPolynomial(Arrays.copyOf(coefficients, maxDegree + 1));
     }
 
     /**

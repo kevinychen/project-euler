@@ -6,6 +6,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'idea'
 apply from: "${rootDir}/gradle/setup.gradle"
 
 sourceCompatibility = 1.8

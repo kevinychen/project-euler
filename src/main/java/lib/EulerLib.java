@@ -1341,7 +1341,7 @@ public class EulerLib {
     }
 
     /**
-     * @return number of positive integers k <= {@link limit} relatively prime to {@link n}.
+     * @return number of positive integers k <= limit relatively prime to n.
      */
     public static long numRelativelyPrime(int n, long limit) {
         if (n == 1)
