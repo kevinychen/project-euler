@@ -36,4 +36,15 @@ public class Zp {
             return 0;
         return factorials[n] * invFactorials[r] % pmod * invFactorials[n - r] % pmod;
     }
+
+    public long nCr(long n, long r) {
+        if (r < 0 || r > n)
+            return 0;
+        long nCr = 1;
+        for (; r > 0; n /= pmod, r /= pmod) {
+            nCr *= nCr((int) (n % pmod), (int) (r % pmod));
+            nCr %= pmod;
+        }
+        return nCr;
+    }
 }
