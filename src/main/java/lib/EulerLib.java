@@ -1571,6 +1571,33 @@ public class EulerLib {
         return X;
     }
 
+    /**
+     * Given an array A representing the coefficients c_i of a formal series X = Σ_i c_i x^i,
+     * returns X^b where multiplication is defined by (x^i)(x^j) = x^(i⊕j) (the bitwise XOR).
+     */
+    public static long[] nimPow(long[] A, long b, long mod) {
+        A = Arrays.copyOf(A, iceilPow(A.length, 2));
+        hadamard(A, mod);
+        for (int i = 0; i < A.length; i++)
+            A[i] = pow(A[i], b, mod);
+        hadamard(A, mod);
+        for (int i = 0; i < A.length; i++)
+            A[i] = A[i] * modInv(A.length, mod) % mod;
+        return A;
+    }
+
+    private static void hadamard(long[] A, long mod) {
+        for (int u = 1; u < A.length; u *= 2)
+            for (int x = 0; x < A.length; x++, x += x & u) {
+                A[x] += A[x + u];
+                A[x + u] = A[x] - 2 * A[x + u];
+                if (A[x] >= mod)
+                    A[x] -= mod;
+                if (A[x + u] < 0)
+                    A[x + u] += mod;
+            }
+    }
+
     /*********************************************************************************
      * GEOMETRY.
      *********************************************************************************/
