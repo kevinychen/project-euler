@@ -1437,38 +1437,6 @@ public class EulerLib {
         return res;
     }
 
-    public static BFraction[] linearSystem(BFraction[][] A, BFraction[] B) {
-        int n = A.length;
-        for (int i = 0; i < n; i++) {
-            int maxRow = i;
-            for (int j = i + 1; j < n; j++)
-                if (A[j][i].compareTo(A[maxRow][i]) > 0)
-                    maxRow = j;
-            for (int j = 0; j < n; j++) {
-                BFraction temp = A[i][j];
-                A[i][j] = A[maxRow][j];
-                A[maxRow][j] = temp;
-            }
-            BFraction temp = B[i];
-            B[i] = B[maxRow];
-            B[maxRow] = temp;
-            for (int j = i + 1; j < n; j++) {
-                BFraction ratio = A[j][i].divide(A[i][i]);
-                for (int k = i; k < n; k++)
-                    A[j][k] = A[j][k].subtract(ratio.multiply(A[i][k]));
-                B[j] = B[j].subtract(ratio.multiply(B[i]));
-            }
-        }
-        BFraction[] res = new BFraction[n];
-        for (int i = n - 1; i >= 0; i--) {
-            res[i] = B[i];
-            for (int j = i + 1; j < n; j++)
-                res[i] = res[i].subtract(A[i][j].multiply(res[j]));
-            res[i] = res[i].divide(A[i][i]);
-        }
-        return res;
-    }
-
     /**
      * Given a tridiagonal system of equations of the form:
      *
