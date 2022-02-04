@@ -1,7 +1,7 @@
 
 package lib;
 
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -102,8 +102,8 @@ public final class Graph<T> extends EulerLib {
 
     public long kruskal() {
         Map<T, Integer> ordering = indexMap(vertices);
-        List<Entry<Edge, Long>> edges = list((Iterable<Entry<Edge, Long>>) weights.entries());
-        Collections.sort(edges, (edge1, edge2) -> Long.compare(edge1.getValue(), edge2.getValue()));
+        List<Entry<Edge, Long>> edges = list(weights.entries());
+        edges.sort(Comparator.comparingLong(Entry::getValue));
         UnionFind uf = new UnionFind(vertices.size());
         long minimumSpanningTreeLen = 0;
         for (Entry<Edge, Long> edge : edges) {

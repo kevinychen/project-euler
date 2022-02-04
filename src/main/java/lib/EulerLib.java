@@ -30,7 +30,6 @@ import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 import com.google.common.collect.TreeMultiset;
 
-import data.BFraction;
 import data.FPolynomial;
 import data.LFraction;
 import data.LPoint;
@@ -462,20 +461,17 @@ public class EulerLib {
     }
 
     public static Generator<LTriangle> pythagoreanTriples(PythagoreanTriplePredicate predicate) {
-        return new Generator<LTriangle>() {
-            @Override
-            public void generateUntil(Function<LTriangle, Boolean> f) {
-                for (long n = 1; predicate.verify(n, n, 1); n++)
-                    for (long m = n + 1; predicate.verify(m, n, 1); m += 2)
-                        if (gcd(m, n) == 1)
-                            for (long k = 1; predicate.verify(m, n, k); k++) {
-                                long a = k * (m * m - n * n);
-                                long b = k * (2 * m * n);
-                                long c = k * (m * m + n * n);
-                                if (f.apply(new LTriangle(a, b, c)))
-                                    return;
-                            }
-            }
+        return f -> {
+            for (long n = 1; predicate.verify(n, n, 1); n++)
+                for (long m = n + 1; predicate.verify(m, n, 1); m += 2)
+                    if (gcd(m, n) == 1)
+                        for (long k = 1; predicate.verify(m, n, k); k++) {
+                            long a = k * (m * m - n * n);
+                            long b = k * (2 * m * n);
+                            long c = k * (m * m + n * n);
+                            if (f.apply(new LTriangle(a, b, c)))
+                                return;
+                        }
         };
     }
 
@@ -1575,6 +1571,14 @@ public class EulerLib {
         for (int i = 0; i < points.length; i++)
             area += points[i].cross(points[(i + 1) % points.length]);
         return Math.abs(area);
+    }
+
+    /**
+     * Returns a positive value if you veer left when moving from p1 to p2 to p3,
+     * a negative value if you veer right, and 0 otherwise.
+     */
+    public static float turn(LPoint p1, LPoint p2, LPoint p3) {
+        return Math.signum(p2.subtract(p1).cross(p3.subtract(p2)));
     }
 
     /**
