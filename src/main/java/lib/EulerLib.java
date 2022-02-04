@@ -331,8 +331,15 @@ public class EulerLib {
             return mod(a, mod);
         else if (b == 2)
             return sq(a, mod);
-        long res = pow(a, b / 2, mod);
-        return mod(sq(res, mod) * (b % 2 == 0 ? 1 : mod(a, mod)), mod);
+        long res = 1;
+        for (long bit = Long.highestOneBit(b); bit > 0; bit /= 2) {
+            res = res * res % mod;
+            if ((b & bit) > 0)
+                res = res * a % mod;
+        }
+        if (res < 0)
+            res += mod;
+        return res;
     }
 
     public static int isqrt(double r) {
