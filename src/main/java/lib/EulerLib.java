@@ -966,6 +966,16 @@ public class EulerLib {
         return factorials;
     }
 
+    public static double[] logFactorials(int n) {
+        double[] logFactorials = new double[n + 1];
+        for (int i = 1; i <= n; i++)
+            if (i < 10000)
+                logFactorials[i] = logFactorials[i - 1] + Math.log(i);
+            else
+                logFactorials[i] = (i + .5) * Math.log(i + 1) - (i + 1) + Math.log(2 * Math.PI) / 2 + 1. / (12 * (i + 1));
+        return logFactorials;
+    }
+
     /**
      * For a prime p, returns the maximum e such that p^e | n!.
      */
