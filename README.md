@@ -26,7 +26,8 @@ Java programs for [Project Euler](https://projecteuler.net). Every solution sati
 | 20 | 476 to 500 | 54.9 seconds |
 | 21 | 501 to 525 | 64.8 seconds |
 | 22 | 526 to 550 | 64.9 seconds |
-| 23+ | 551+ | In progress! |
+| 23 | 551 to 575 | 98.5 seconds |
+| 24+ | 576+ | In progress! |
 
 (Run on Intel Core i9 @ 2.3GHz.)
 
@@ -61,13 +62,7 @@ To run all tests (takes a few minutes):
 
 ## Development
 
-To setup the Eclipse project, run the following:
+For IntelliJ, run `./gradlew idea` and open the project.
 
-    $ ./gradlew eclipse
-
-This project uses Lombok to easily generate Java data objects. To install Lombok in Eclipse, download and execute [lombok.jar](https://search.maven.org/remotecontent?filepath=org/projectlombok/lombok/1.16.12/lombok-1.16.12.jar).
-
-To import this project, open Eclipse and click "Import" -> "Existing Projects into Workspace". Select this directory.
-
-To maintain consist style in Eclipse, import the `formatter.xml` file in the root directory of this repository. Under project-specific preferences, select "Java Code Style" -> "Formatter", and import the `formatter.xml` profile.
+For Eclipse, run `./gradlew eclipse` and then import "Existing Projects into Workspace". You will also need to setup [Lombok](https://projectlombok.org/setup/eclipse).
 
