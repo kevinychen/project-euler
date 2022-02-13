@@ -926,6 +926,13 @@ public class EulerLib {
         return b == 0 ? a : gcd(b, a % b);
     }
 
+    public static long gcd(long... nums) {
+        long gcd = gcd(nums[0], nums[1]);
+        for (int i = 2; i < nums.length; i++)
+            gcd = gcd(nums[i], gcd);
+        return gcd;
+    }
+
     public static int[][] gcds(int limit) {
         int[][] gcds = new int[limit + 1][limit + 1];
         for (int g = 1; g <= limit; g++)
