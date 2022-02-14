@@ -52,7 +52,7 @@ Files in Git will now be automatically decrypted, and files added to Git will be
 
 ## Running tests
 
-Each solution is a JUnit test that can be run in Eclipse. A test can also be run directly with Gradle:
+Each solution is a JUnit test that can be run in your IDE, or directly in Gradle:
 
     $ ./gradlew test --tests *p001 // runs the program for Problem 1
 

@@ -82,14 +82,6 @@ public class EulerLib {
         throw new IllegalArgumentException("death");
     }
 
-    public static void sleep(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static void runWithLargeStack(Runnable r) {
         Thread thread = new Thread(null, r, "", 1 << 21);
         thread.start();
@@ -898,13 +890,12 @@ public class EulerLib {
         if (mobius != null && mobius.length > limit)
             return;
         mobius = new int[limit + 1];
-        for (int i = 1; i <= limit; i++)
-            mobius[i] = 1;
-        for (int i = 2; i * i <= limit; i++)
+        Arrays.fill(mobius, 1);
+        for (int i = 2; sq(i) <= limit; i++)
             if (mobius[i] == 1) {
                 for (int j = i; j <= limit; j += i)
                     mobius[j] *= -i;
-                for (int j = i * i; j <= limit; j += i * i)
+                for (int j = isq(i); j <= limit; j += sq(i))
                     mobius[j] = 0;
             }
         for (int i = 2; i <= limit; i++)

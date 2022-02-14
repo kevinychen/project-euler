@@ -1,96 +1,50 @@
 
 package lib;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Function;
 
 import data.BPoint;
 import data.LPoint;
 import lombok.Data;
 
-/**
- * Solve various Pell equations of the form x² - D y² = N.
- * <p>
- * http://www.jpr2718.org/pell.pdf
- */
 public final class Pell extends EulerLib {
 
     /**
-     * Solve for all positive solutions of x² - D y² = 1.
+     * Solve for all positive solutions of x²-Dy²=1.
      */
-    public static Generator<LPoint> standard(long D) {
-        return new Generator<LPoint>() {
-            @Override
-            public void generateUntil(Function<LPoint, Boolean> f) {
-                List<PQaStep> steps = list();
-                PQa(0, D, 1).generateUntil(step -> {
-                    steps.add(step);
-                    return step.a == 2 * steps.get(0).a;
-                });
-                removeLast(steps);
-                LPoint baseSol = new LPoint(last(steps).G, last(steps).B), sol = baseSol;
-                for (int e = 1; true; e++) {
-                    if ((steps.size() % 2 == 0 || e % 2 == 0) && f.apply(sol))
-                        break;
-                    sol = multiply(sol, baseSol, D);
-                }
-            }
+    public static Generator<BPoint> standard(long D) {
+        return f -> {
+            FundamentalSolution fundamentalSolution = fundamentalSolution(D);
+            LPoint baseSol = fundamentalSolution.sol;
+            if (fundamentalSolution.parity == -1)
+                baseSol = multiply(baseSol, baseSol, D);
+            for (BPoint sol = BPoint.fromPoint(baseSol); true; sol = multiply(sol, baseSol, D))
+                if (f.apply(sol))
+                    break;
         };
     }
 
     /**
-     * Solve for all positive solutions of x² - D y² = -1.
+     * Solve for all positive solutions of x²-Dy²=-1.
      */
     public static Generator<LPoint> negative(long D) {
-        return new Generator<LPoint>() {
-            @Override
-            public void generateUntil(Function<LPoint, Boolean> f) {
-                List<PQaStep> steps = list();
-                PQa(0, D, 1).generateUntil(step -> {
-                    steps.add(step);
-                    return step.a == 2 * steps.get(0).a;
-                });
-                removeLast(steps);
-                LPoint baseSol = new LPoint(last(steps).G, last(steps).B), sol = baseSol;
-                if (steps.size() % 2 == 0)
-                    return;
-                for (int e = 1; true; e++) {
-                    if (e % 2 == 1 && f.apply(sol))
-                        break;
-                    sol = multiply(sol, baseSol, D);
-                }
-            }
+        return f -> {
+            FundamentalSolution fundamentalSolution = fundamentalSolution(D);
+            if (fundamentalSolution.parity == 1)
+                return;
+            LPoint scale = multiply(fundamentalSolution.sol, fundamentalSolution.sol, D);
+            for (LPoint sol = fundamentalSolution.sol; true; sol = multiply(sol, scale, D))
+                if (f.apply(sol))
+                    break;
         };
     }
 
     /**
-     * Solve for all positive solutions of x² - D y² = -4.
-     */
-    public static Generator<LPoint> negativeFermatDifferenceEquation(long D) {
-        return new Generator<LPoint>() {
-            @Override
-            public void generateUntil(Function<LPoint, Boolean> f) {
-                List<PQaStep> steps = list();
-                PQa(1, D, 2).generateUntil(step -> {
-                    steps.add(step);
-                    return step.a == 2 * steps.get(0).a - 1 && steps.size() > 1;
-                });
-                removeLast(steps);
-                LPoint baseSol = new LPoint(last(steps).G, last(steps).B), sol = baseSol;
-                if (steps.size() % 2 == 0)
-                    return;
-                for (int e = 1; true; e++) {
-                    if (e % 2 == 1 && f.apply(sol))
-                        break;
-                    sol = multiply(sol, baseSol, D).divide(2);
-                }
-            }
-        };
-    }
-
-    /**
-     * Solve for all positive solutions of x² - D y² = N.
+     * Solve for all positive solutions of x²-Dy²=N.
      */
     public static Generator<BPoint> general(long D, long N) {
         return general(D, stdSol -> {
@@ -111,33 +65,33 @@ public final class Pell extends EulerLib {
     }
 
     /**
-     * Solve for all positive solutions of x² - D y² = N, using the custom function to generate base
+     * Solve for all positive solutions of x²-Dy²=N, using the custom function to generate base
      * solutions.
      */
     public static Generator<BPoint> general(long D, Function<LPoint, Set<LPoint>> stdSolToBaseSols) {
-        return new Generator<BPoint>() {
-            @Override
-            public void generateUntil(Function<BPoint, Boolean> f) {
-                LPoint stdSol = standard(D).get(0);
-                Set<LPoint> baseSols = stdSolToBaseSols.apply(stdSol);
-                List<BPoint> sols = list();
-                for (LPoint sol : baseSols) {
-                    if (sol.y > 0)
-                        sols.add(BPoint.fromPoint(sol));
-                    LPoint conjSol = multiply(sol.reflectX(), stdSol, D);
-                    if (conjSol.x < 0)
-                        conjSol = conjSol.negate();
-                    sols.add(BPoint.fromPoint(conjSol));
-                }
-                sols.sort((sol1, sol2) -> sol1.x.compareTo(sol2.x));
-                while (!sols.isEmpty()) {
-                    for (BPoint sol : sols)
-                        if (f.apply(sol))
-                            return;
-                    for (int i = 0; i < sols.size(); i++)
-                        sols.set(i, multiply(sols.get(i), stdSol, D));
-                }
+        return f -> {
+            FundamentalSolution fundamentalSolution = fundamentalSolution(D);
+            LPoint stdSol = fundamentalSolution.sol;
+            if (fundamentalSolution.parity == -1)
+                stdSol = multiply(stdSol, stdSol, D);
+            Set<LPoint> baseSols = stdSolToBaseSols.apply(stdSol);
+            Set<BPoint> sols = new TreeSet<>(Comparator.comparing(BPoint::x));
+            for (LPoint sol : baseSols) {
+                if (sol.y > 0)
+                    sols.add(BPoint.fromPoint(sol));
+                LPoint conjSol = multiply(sol.reflectX(), stdSol, D);
+                if (conjSol.x < 0)
+                    conjSol = conjSol.negate();
+                sols.add(BPoint.fromPoint(conjSol));
             }
+            List<BPoint> orderedSols = list(sols);
+            while (!sols.isEmpty())
+                for (int i = 0; i < sols.size(); i++) {
+                    BPoint sol = orderedSols.get(i);
+                    if (f.apply(sol))
+                        return;
+                    orderedSols.set(i, multiply(sol, stdSol, D));
+                }
         };
     }
 
@@ -188,8 +142,26 @@ public final class Pell extends EulerLib {
 
     @Data
     public static class PQaStep {
+
         public final long a;
         public final long A, B, G;
         public final long P, Q;
+    }
+
+    private static FundamentalSolution fundamentalSolution(long D) {
+        List<PQaStep> steps = list();
+        PQa(0, D, 1).generateUntil(step -> {
+            steps.add(step);
+            return step.a == 2 * steps.get(0).a;
+        });
+        removeLast(steps);
+        return new FundamentalSolution(new LPoint(last(steps).G, last(steps).B), parity(steps.size()));
+    }
+
+    @Data
+    private static class FundamentalSolution {
+
+        final LPoint sol;
+        final int parity;
     }
 }
