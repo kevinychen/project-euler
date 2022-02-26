@@ -204,7 +204,7 @@ public class NumberTheory extends EulerLib {
     }
 
     /**
-     * Returns M(l) for all l = ⌊n/k⌋, where M(n) = sum_{k=1}^n μ(k) is the summatory Mobius
+     * Returns M(l) for all l = ⌊n/k⌋, where M(n) = Σ_{k=1}^n μ(k) is the summatory Mobius
      * function. The algorithm runs in time O(n^{2/3}) by using the identity sum_{k=1}^n M(⌊n/k⌋) =
      * 1.
      */
@@ -223,6 +223,23 @@ public class NumberTheory extends EulerLib {
             for (int t = 1; t <= n / i / isqrt(n / i); t++)
                 big[i] -= (n / i / t - n / i / (t + 1)) * small[t];
         }
+        return new QuotientValues(n, big, small);
+    }
+
+    /**
+     * Returns M(l,p) for all l=⌊n/k⌋, where M(n,p) is the sum of µ(k) for k=[1,n] that are
+     * multiples of prime p. This uses the fact that µ(a*p) = µ(a)µ(p) if a doesn't divide p, so
+     * M(n,p) = µ(p)+µ(2p)+µ(3p)+... = µ(p) ((µ(1)+µ(2)+µ(3)+...) - (µ(p)+µ(2p)+...))
+     * = (-1) (M(⌊n/p⌋) - M(⌊n/p⌋,p)).
+     */
+    public static QuotientValues sumPeriodicMobius(QuotientValues mertens, int p) {
+        long n = mertens.getN();
+        long[] big = new long[mertens.getBig().length];
+        long[] small = new long[mertens.getSmall().length];
+        for (int i = 0; i < small.length; i++)
+            small[i] = small[i / p] - mertens.get(i / p);
+        for (int i = big.length; --i >= 1;)
+            big[i] = (p * i < big.length ? big[p * i] : small[(int) (n / p / i)]) - mertens.div(i * p);
         return new QuotientValues(n, big, small);
     }
 
