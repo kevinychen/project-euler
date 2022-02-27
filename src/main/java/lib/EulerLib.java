@@ -283,6 +283,10 @@ public class EulerLib {
         return n * n % mod * n % mod;
     }
 
+    public static double fcb(double n) {
+        return n * n * n;
+    }
+
     public static int itr(int n) {
         return n * (n + 1) / 2;
     }
