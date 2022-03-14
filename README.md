@@ -27,22 +27,22 @@ Java programs for [Project Euler](https://projecteuler.net). Every solution sati
 | 21 | 501 to 525 | 64.8 seconds |
 | 22 | 526 to 550 | 64.9 seconds |
 | 23 | 551 to 575 | 98.5 seconds |
-| 24+ | 576+ | In progress! |
+| 24 | 576 to 600 | 82.6 seconds |
+| 25+ | 601+ | In progress! |
 
 (Run on Intel Core i9 @ 2.3GHz.)
 
-## Setup
+## One-time setup
 
-This repository requires Java 8. In order to decrypt the files, you need an `answers.txt` file in the root directory in the following format (you do not need to include all answers):
+The solution files are encrypted. To decrypt them, first create an `answers.txt` file in the root directory with the following contents:
 
     1. answer to Problem 1
     2. answer to Problem 2
+    ...
 
-To generate this `answers.txt` file with answers to all of your solved problems, run the following command:
+You do not need to include all the answers, but only the problems numbers listed in `answers.txt` will be decrypted.
 
-    $ ./gradlew fetchAnswers
-
-The task will prompt you to enter your Project Euler credentials. This is only for fetching the answers to your solved problems, in order to decrypt the files; the task does not save any data or make any changes to your account. If you do not wish to enter your credentials or are offline, you may create the `answers.txt` file manually.
+This file can be created manually, but an alternative is to run `./gradlew fetchAnswers`. This will prompt you to enter your Project Euler credentials. (Note: this is only for fetching the answers to your solved problems, in order to decrypt the files; the task does not save any data or make any changes to your account.) It then automatically generates a `answers.txt` file with answers to all of your solved problems.
 
 Now run the following:
 
@@ -61,6 +61,8 @@ To run all tests (takes a few minutes):
     $ ./gradlew test
 
 ## Development
+
+This repository requires Java 8+.
 
 For IntelliJ, run `./gradlew idea` and open the project.
 

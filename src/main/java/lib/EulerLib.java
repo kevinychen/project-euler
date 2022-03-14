@@ -15,6 +15,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import com.google.common.base.Joiner;
@@ -729,6 +730,25 @@ public class EulerLib {
         return primes(getPrimesLimit(numPrimes)).subList(0, numPrimes);
     }
 
+    /**
+     * Precomputes all values of the multiplicative function (in the number theory sense) F,
+     * given the values of F(p^e) = f(p,e).
+     */
+    public static long[] multiplicativeFunction(int limit, BiFunction<Integer, Integer, Long> f) {
+        preff(limit);
+        long[] values = new long[limit + 1];
+        values[1] = 1;
+        for (int i = 2; i <= limit; i++) {
+            int n = i, p = ff[i], e = 0;
+            while (n % p == 0) {
+                n /= p;
+                e++;
+            }
+            values[i] = values[n] * f.apply(p, e);
+        }
+        return values;
+    }
+
     public static long[] numDivisors(int limit) {
         return sumDivisorPowers(limit, 0);
     }
@@ -863,11 +883,15 @@ public class EulerLib {
      * Returns an array where omegas[n] is the number of distinct prime divisors of n.
      */
     public static int[] omegas(int limit) {
+        preff(limit);
         int[] omegas = new int[limit + 1];
-        for (int i = 2; i <= limit; i++)
-            if (omegas[i] == 0)
-                for (int j = i; j <= limit; j += i)
-                    omegas[j]++;
+        for (int n = 2; n <= limit; n++) {
+            int nCopy = n;
+            int d = ff[n];
+            while (nCopy % d == 0)
+                nCopy /= d;
+            omegas[n] = omegas[nCopy] + 1;
+        }
         return omegas;
     }
 
@@ -875,17 +899,8 @@ public class EulerLib {
      * Returns an array where rads[n] is the radical of n, the product of the distinct prime factors
      * of n.
      */
-    public static int[] rads(int limit) {
-        preff(limit);
-        int[] rads = new int[limit + 1];
-        rads[1] = 1;
-        for (int i = 2; i <= limit; i++) {
-            int n = i, p = ff[i];
-            while (n % p == 0)
-                n /= p;
-            rads[i] = rads[n] * p;
-        }
-        return rads;
+    public static long[] rads(int limit) {
+        return multiplicativeFunction(limit, (p, e) -> (long) p);
     }
 
     public static int[] mobius;
