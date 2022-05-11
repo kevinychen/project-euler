@@ -24,7 +24,7 @@ final HOST = 'https://projecteuler.net';
 /**
  * Fetch the answers for all problems that the user has solved and write them to answers.txt.
  */
-task fetchAnswers() << {
+def fetchAnswersTask() {
     // First visit the sign in page to get a PHPSESSID
     def connection = new URL("$HOST/sign_in").openConnection();
     def setCookieHeader = connection.getHeaderField('Set-cookie');
@@ -150,5 +150,11 @@ task fetchAnswers() << {
     solvedProblems.forEach { problem -> lines.add("$problem. ${answers[problem]}") }
     Files.write(Paths.get('answers.txt'), lines);
     System.out.println("Done.");
+}
+
+task fetchAnswers() {
+    doLast {
+        fetchAnswersTask();
+    }
 }
 

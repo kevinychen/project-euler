@@ -16,10 +16,10 @@ repositories {
 }
 
 dependencies {
-    compile "com.google.guava:guava:27.1-jre"
-    compile "one.util:streamex:0.7.2"
-    compile "org.jacop:jacop:4.7.0"
-    compile "org.projectlombok:lombok:1.18.20"
-    testCompile "junit:junit:4.12"
+    implementation "com.google.guava:guava:27.1-jre"
+    implementation "one.util:streamex:0.7.2"
+    implementation "org.jacop:jacop:4.7.0"
+    implementation "org.projectlombok:lombok:1.18.20"
+    testImplementation "junit:junit:4.12"
 }
 
