@@ -328,6 +328,7 @@ public class EulerLib {
             return mod(a, mod);
         else if (b == 2)
             return sq(a, mod);
+        a %= mod;
         long res = 1;
         for (long bit = Long.highestOneBit(b); bit > 0; bit /= 2) {
             res = res * res % mod;

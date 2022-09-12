@@ -26,3 +26,7 @@ dependencies {
     testImplementation "junit:junit:4.12"
 }
 
+test {
+    jvmArgs "-Xmx4096m"
+}
+

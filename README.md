@@ -28,7 +28,8 @@ Java programs for [Project Euler](https://projecteuler.net). Every solution sati
 | 22 | [526 to 550](src/test/java/level22) | 64.9 seconds |
 | 23 | [551 to 575](src/test/java/level23) | 98.5 seconds |
 | 24 | [576 to 600](src/test/java/level24) | 82.6 seconds |
-| 25+ | 601+ | In progress! |
+| 25 | [601 to 625](src/test/java/level25) | 54.0 seconds |
+| 26+ | 626+ | In progress! |
 
 (Run on Intel Core i9 @ 2.3GHz.)
 
