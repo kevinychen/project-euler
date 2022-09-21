@@ -1118,15 +1118,10 @@ public class EulerLib {
     }
 
     public static long nthrt(long b, int n) {
-        long low = 0, high = b;
-        while (low + 1 < high) {
-            long mid = (low + high) / 2;
-            if (Math.pow(mid, n) < Long.MAX_VALUE && pow(mid, n) <= b)
-                low = mid;
-            else
-                high = mid;
-        }
-        return low;
+        long estimate = (long) Math.pow(b, 1. / n);
+        if (Math.pow(estimate + 1, n) < Long.MAX_VALUE && pow(estimate + 1, n) <= b)
+            estimate++;
+        return estimate;
     }
 
     public static BigInteger nthrt(BigInteger b, int n) {
