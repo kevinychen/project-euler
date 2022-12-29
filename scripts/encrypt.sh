@@ -30,7 +30,7 @@ then
     pass=$(cat $ANSWERS_FILE 2> /dev/null | grep "^$number\." | cut -d ' ' -f 2)
     if [[ $pass ]]
     then
-        cat | openssl enc -nosalt -aes-256-cbc -d -pass pass:$pass
+        cat | openssl enc -nosalt -aes-256-cbc -md md5 -d -pass pass:$pass
     else
         echo $number
         cat
@@ -61,7 +61,7 @@ then
         fi
 
         echo $number
-        echo "${contents//\\/\\\\}" | openssl enc -nosalt -aes-256-cbc -pass pass:$pass
+        echo "${contents//\\/\\\\}" | openssl enc -nosalt -aes-256-cbc -md md5 -pass pass:$pass
     else
         echo "Failed to encrypt file $number." 1>&2
         exit 0
