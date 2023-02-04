@@ -267,15 +267,15 @@ public class NumberTheory extends EulerLib {
     }
 
     /**
-     * Given the prime factors of n (with multiplicity), returns all points x,y ≥ 0 such that x²+y²
+     * Given the prime factors of n (with multiplicity), returns all points x,y ≥ 0 such that x²+y²
      * = n.
      */
-    public static Set<LPoint> sumsOfTwoSquares(List<Integer> unsortedPrimeFactors) {
-        List<Integer> primeFactors = list(unsortedPrimeFactors);
+    public static Set<LPoint> sumsOfTwoSquares(List<Long> unsortedPrimeFactors) {
+        List<Long> primeFactors = list(unsortedPrimeFactors);
         Collections.sort(primeFactors);
         Set<LPoint> sums = set(new LPoint(0, 1), new LPoint(1, 0));
         for (int i = 0; i < primeFactors.size(); i++) {
-            int p = primeFactors.get(i);
+            long p = primeFactors.get(i);
             LPoint oneSum;
             if (p % 4 == 3) {
                 if (i + 1 == primeFactors.size() || primeFactors.get(i + 1) != p)
@@ -314,11 +314,11 @@ public class NumberTheory extends EulerLib {
         preff(2 * n);
         List<LPoint3D> sums = list(new LPoint3D(n, 0, 0));
         for (int x = 0; x < n; x++) {
-            List<Integer> primeFactors = list();
+            List<Long> primeFactors = list();
             for (int factor : list(n - x, n + x))
                 primeFactor(factor).forEach((p, e) -> {
                     for (int i = 0; i < e; i++)
-                        primeFactors.add(p);
+                        primeFactors.add((long) p);
                 });
             for (LPoint sum : NumberTheory.sumsOfTwoSquares(primeFactors))
                 sums.add(new LPoint3D(x, sum.x, sum.y));
