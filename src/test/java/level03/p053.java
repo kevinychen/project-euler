@@ -1,2 +1,24 @@
-53
-­~.G9½_«0éİ–Ä•ôpJüéÈrcY/:,%ëç_"×±ä8¡ÄÙVJ9½½Ô¸j³c¤ë6­aXÏúÁ¤­Dª öë[KË¯nª/fêS®™Ö˜dÚUãY‰+Í}¦ŸÔ‘p|—38—ö¢Ô÷N-ÁtçÕ<UršìseRj”úœ;¾HxlS	XÁGN\Âe¢¥şC¦ç-f´¤ªşP?dH#²Æ×‘g(Çş4Š×6Í•»vÒU/Ùcq¾1µşˆIêeÍÉ"x×¿C{\¥sÉkõI‡y°Î#ìµBv-|Ml4æouqâ²çÅ</B¬n)ë˜"­qC¨Ká¥š¬˜gÕ#zwØqQWş6püêÀO¾Ÿ¿†{SÕ£T:iSvËèA·©ÃóBïz“²(yÕ¤­Xõï¦?bw±úQ§!„Ì.šñÛp$;ìú±m‰…‚¥ğ´›èÛ;3„ÎAVC.”›æi\<l›p‘Ï\À(:ÿOË0¾ü‹D­K*±fº2ÊbÌd¼õ¦òv*h>ÎĞ÷ıÓ™+¦*¨Şïê•'ùjˆ=•gş0R‰G´äD
+
+package level03;
+
+import org.junit.Test;
+
+import lib.EulerTest;
+
+public class p053 extends EulerTest {
+
+    final int N = 1000000;
+    final int K = 100;
+
+    /**
+     * Find the number of pairs (n, r) with nâ‰¤K such that nCr(n, r) is at least N.
+     */
+    @Test
+    public void test() {
+        for (int n : rangeC(K))
+            for (int r : rangeC(n))
+                if (fnCr(n, r) > N)
+                    ans++;
+        check(4075);
+    }
+}

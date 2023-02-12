@@ -1,2 +1,39 @@
-49
-¬s@ÅFª¨û<Nãv(ZŸôtbÆzO¿ú}K8+fQ#þ³Áæ?$bóRgJzîyþŽ7£ˆ™ÝZéœ[ú‹At”qE¦x’ÜYŽ	]ùšqì¼¥¶ª1îó#› ùh´^^ó3‡«tZ`¢mKË–‰ï@²ë#éÑMÂv2%åOIÿïªðü³ëë³ÚÃÃÏ4›ZÃ>l«…²6}Ú„íxlI:mçØ'ÔF¡‘àŠÏ3É¢‹é³^„( ¸$ä_&û‚{3CxK.Sël6½·…ÖV.ö/Å{ïÒ°L’ªæœ±RËXhÜÖnƒ@ý¦9°)£>„1qÂL°ßåÐRîS«ª2´ö¨µoI¦Ì–ç<†'‡;Í|ÏFüÀ¨þbÓëÙ¿Ý°ÄÈÕ]þŠ¯Úöi|$¼0Ä™ú;ì¸bÞQ@’™ÚP0ÃFg¬tPu9GìDË°x¥R€¯xY/ ;:ÇÅ"âM¡å–Ú¡ä¤¾ä k9¸`g”Gµ8¶d@CúXËt ÃRÃ¹Áåà•6Lf‰w‡R ÔÎØ¢=bä›„¾lÃÚ//¨‰#Žujq¹ÍÐÈWÉ—ù»ëw‰uÀ Âß9‘nÉ$c0ôÄ_ÀmÆÚû–·"®+õ¡«ü@à6†!líËñêˆkFïôÿûb'w.;.¥)Nn4K…E=­’EGäíc¸Av"­`-æ(úš–ƒ& •M2ÓaÎÁ\»_øÛ×Wö2À³FóâÈ§¯ScþTkeiií|ÿ8 …uöçd•Öò˜„§fŸ‡ªÓ b/–ú¤){_Ü(„;å2€ÕÍó;ì¨S|qî‰äLîDW¤^œ«¯š‚bÍ‘GdË¶‰˜³™ùßWñFÅBŠð„î>oÊ•aé¬Ñp¡ý9‹¸´ïfyª„~Ž9$â6ŽßT­çö—«)µØž™¾^Í‡Å€;wçïÝvžç»«V£'Ò•6ÎÓåéT¯ÿ£»çA/Ÿeå]&×¹LG²^r£»ýdÞ¸Däva””Aëý8_T**³Âk¥èÓpè$y¿ ¹‹wŠÌwi×ÆB®½¦Õ>—¡ñÈÂânÄF’qâÓ°ë—iŒ­ÝosW<’ÕiÜ…Ñ{ÌŠ÷ID	öù6ë§aÒa¬«³Ý8e¯ÞÎ§S²¾„a"ü4xÝ<2ÿîó¢#ywÈzÅqB*ð<j©¹ù°XÔÓ,¥ý£aXêPkE—¡‡°»Of2HqµªOÎ>ºSQ‰ÞfcLøQµä‹ŒIýÊLãÍc\îj’ 7-ZçRFÒ¼uó>¬|¥
+
+package level02;
+
+import java.util.List;
+
+import org.junit.Test;
+
+import lib.EulerTest;
+
+public class p049 extends EulerTest {
+
+    final int N = 4;
+    final int B = 10;
+
+    String ans;
+
+    /**
+     * Find the concatenation of the arithmetic sequence of N-digit primes A, B, C which are all
+     * permutations of each other.
+     */
+    @Test
+    public void test() {
+        for (int p1 : primes(ipow(B, N))) {
+            List<Integer> digits = digits(p1);
+            permutations(digits).generateUntil(permutation -> {
+                int p2 = Integer.parseInt(join(permutation));
+                if (p2 > p1 && isPrime(p2)) {
+                    int p3 = 2 * p2 - p1;
+                    if (p3 < pow(B, N) && isPrime(p3) && isPermutation(digits, digits(p3))) {
+                        ans = "" + p1 + p2 + p3;
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
+        check(ans, "296962999629");
+    }
+}

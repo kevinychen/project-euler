@@ -1,1 +1,2 @@
-src/test/java/*/p*.java filter=euler diff=euler merge=binary
+src/test/java/level0[5-9]/p*.java filter=euler diff=euler merge=binary
+src/test/java/level[1-9][0-9]/p*.java filter=euler diff=euler merge=binary

@@ -1,6 +1,6 @@
 # Project Euler Java library and solutions
 
-Java programs for [Project Euler](https://projecteuler.net). Every solution satisfies the one-minute rule. Most solutions complete in less than a few seconds. To keep with the spirit of Project Euler, each solution is encrypted with its corresponding answer.
+Java programs for [Project Euler](https://projecteuler.net). Every solution satisfies the one-minute rule. Most solutions complete in less than a few seconds. To keep with the spirit of Project Euler, each solution after the first 100 problems is encrypted with its corresponding answer.
 
 | Level | Problems | Total time to run 25 solutions |
 | --- | --- | --- |

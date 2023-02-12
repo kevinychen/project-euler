@@ -1,3 +1,27 @@
-29
-cÀ“jz
-“~Ftª±Òˆ†üvIN4ËÅd;Ø¹Òiq±P†qÌ¦ç=UìIFR¤g}´+É7¦Í¹Jå´®×‰>“®náòøÿ““Éıd˜ªL”óím‘+ì6Z[™KÉWåßİŞ<³¨³%ŠgSàŸ§Å	Ğàë…Æƒ¿í?O1å¯Á0oÕÜÍj³ÉÁ¦6çûD„š-z½mÛ­÷ùJúvAeÂ´b|R”RFbÏæY•úJ(³ÉìU«ÕÄå*›mÎàÕ·>^H°Î/_‹«-à¥IŸ¸ø¹Ş¾Ò¦)ùÕ\g‘ÁvnÓ3eøÉª$©Pö‹POé¯ß:;êãï—”ÉÒÆÕFí'‚¾‹šr'Îª‰0}(ó”ÿ ›[ß%œüÄ.ø]ş™ÜÃ‘¹Å·M=èfŠñvúfØØÂù^¼PÜµ“˜ò7q|@Xë½%ën^3P_$ˆÑTæÉ{ÂNàõ˜³*Œ4õOKÓÎ1Gy@1òD9àR?t£Åx½ õ…T"*©İnpJxÊ´BUvÏ”)mÛM	ôÅ®+€3¯CæÊL†±9±•TFvZM=EĞcs5åF½ñj¶Ğæx´»ãé.|»“?¹Å?KA_Ëˆ¦ændÇ3‘ ÌKE;»:Ñ
+
+package level02;
+
+import java.math.BigInteger;
+import java.util.Set;
+
+import org.junit.Test;
+
+import lib.EulerTest;
+
+public class p029 extends EulerTest {
+
+    final int N = 100;
+
+    /**
+     * Find the number of distinct values of a^b where 2â‰¤a,bâ‰¤N.
+     */
+    @Test
+    public void test() {
+        Set<BigInteger> nums = set();
+        for (int a : rangeC(2, N))
+            for (int b : rangeC(2, N))
+                nums.add(big(a).pow(b));
+        ans = nums.size();
+        check(9183);
+    }
+}

@@ -1,2 +1,26 @@
-19
-¹šã$@ìYMCú»MWÔ|±E’Õ–	h´ÂÙj·"-xÍzÎæ¨Äy1Êşğog<ªÙtk`:"^¸¡Š“ìCåë:g÷*;;%ğ-|”Ëüvo_îØÉÌ:”Œç„YÜÈÖ‡Ÿı‰äBã´QQr"¥fµ&Ip:L8ãyg˜û:iãZÄé¼bûyR{Sı¿ê¦ŸLŸbª÷ÆƒT(Úªçmv}PF¾âj¶Vê€”÷]ƒx¿ÜY®E§_;8íàg8ÁÙTkñÄ1m’Áíë&£{è]Vezdjÿ…ã®ĞHaàWÚIñ‘R††E¶àeA~„İ	R•…ŞHŠMÑ²»ºèS”6´ÿtÈ]„ü²¯×hÕP­+¡ô1@ÎÃ³/¦){r‡]rß•Š•ƒh|ÙÀçyuÏ6¾ñEhÜN°}2'†’úOX§ë×-÷ì±$]ı²šMıÙ³æ@óÔÛIõ7ŠrÚı¬°;ôf…"»Ö3i½®‰‹XªCÖÚx„W_X–›(İ6uÛáşñİ/ÒC:^´dÜŒ…â&Û°è+^«¿§5 |óˆh6šÖ^ùnK˜ı­@’L‰Ö‘Ô€;bÇïkê?u‚û!‡èZB‚)·°ünü™[LSœhæ'.J[X8)…„gO¶k'?‘ÜbÁ­ğŞm£YÄ/cí×—ogËıiÌ¿>;cöqÚ¬–nş@ÉÅéåá½"ÊQáßsuA(¸œİÆíÖ$ó&)À›ÛHú9z—¼¡ä]êĞG,/ÒçW^ÎÚSe–J¥‹ù/OJ|ÏØğ†kê˜£6XÒŒd8Ü|Ù6€×±p×-ôfóxb¾¸J(
+
+package level01;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import org.junit.Test;
+
+import lib.EulerTest;
+
+public class p019 extends EulerTest {
+
+    final int YEAR_START = 1901, YEAR_END = 2000;
+
+    /**
+     * Find the number of Sundays on the first of the month from YEAR_START to YEAR_END.
+     */
+    @Test
+    public void test() {
+        for (int year : rangeC(YEAR_START, YEAR_END))
+            for (int month : rangeC(Calendar.JANUARY, Calendar.DECEMBER))
+                if (new GregorianCalendar(year, month, 1).get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
+                    ans++;
+        check(171);
+    }
+}

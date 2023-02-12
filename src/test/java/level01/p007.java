@@ -1,3 +1,20 @@
-7
-kK›¬	L<C™:‡Ν»›Λt=΅	>Έ–™LKω―Vbj»όά+|iΡ$ΏχίCbέσηό~3΄-ψΖ¤Ϋ•“Hj΅©ΉΈzS	Kτζύ±1M·μ»νθ\?Y^ΏΘ6΄_80–_μ(Iς`φΰ	•*s®ϋy4¨sΧQwβώ³‘Q#$Mΰ2qΩaÒΦÒέθηµ1ΐG!¥ά0†e{αwi]Oψ¥σΩiEN•
-If…‘ΐ33-F»$¤Θλu¬ΛdΊ„ή5=@Ο;K1`l„/ήÒΖρα®΄ΜM “nNύ½)Θ{Ν4ΛQήjάGΔΧάA–•Σ²ι¬Θ<&sψΡ‰εaότkΩoλ—Θ
+
+package level01;
+
+import org.junit.Test;
+
+import lib.EulerTest;
+
+public class p007 extends EulerTest {
+
+    final int N = 10001;
+
+    /**
+     * Find the Nth prime number.
+     */
+    @Test
+    public void test() {
+        ans = getPrimes(N).get(N - 1);
+        check(104743);
+    }
+}

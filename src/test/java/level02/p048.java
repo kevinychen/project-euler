@@ -1,4 +1,26 @@
-48
-LY6Ãb›wnb7ĞÎ+)^û0ÛìØ©¡XçÕ¥Ùà×—d
-¬²M­®CÈ^âº•wÓ¿Oaä¨xEO¾¶ Ñ†ug}Ö^Wú‰ò¬K@’":%ø.+á½æï’Á €—÷È®L¥_Š‹¥ßa+l,,…}ŒÃ\Aûb±¦ÍIŒÓÈÃJ!‰ö~Î8Ï<Êj——»ã}d›D„÷F.ÖõRô×ìxNë¢„}{’jû¬@‡]Q™/quv]üıØ4ã !	¦f+‹à)Œ œ_¿{–/Œ%GLèÁlPC¸½GãbÇÖ{€4„‚E©ëÃhJ>°m@?9'}¤êÔüïVÌŒŠô|œ‰DóP¿´1Ü†Y2ºƒ)·ÌâHo+Ñº1N±b¢Ó¼Í?.‚\ÎøI>w¢¢aC£Û‰è*K-Ä.ç)„tkg„§çÔ—ĞCÒïö×@D1ÿI'	’¾"'øûqìÅ(¨­isòb1#ø	ôhæcñ~âÓOd^¥ó=‹š)ùJu.õ·A!ÎItqÌDM#„7òrÚÈ
-áØ_^¤d“˜@Ûh9æXïµ=öa`c¡—$Y9ôiª©¶
+
+package level02;
+
+import java.math.BigInteger;
+
+import org.junit.Test;
+
+import lib.EulerTest;
+
+public class p048 extends EulerTest {
+
+    final int N = 1000;
+    final long M = pow(10, 10);
+
+    /**
+     * Find the last K digits of sum{i=1}^N i^i.
+     */
+    @Test
+    public void test() {
+        BigInteger b = big(0);
+        for (int i : range(1, N))
+            b = b.add(big(i).pow(i));
+        ans = b.mod(big(M)).longValue();
+        check(9110846700L);
+    }
+}

@@ -1,4 +1,26 @@
-39
-p7Œ¨h–âÀôš¤.Œ˜ığÔ?˜‚¾^NÙ›úŒ^Pë²E›‘&ª§ˆy‘l+µ 1ØD:66şW6YŸ·¸#ym‘~ıÈ3cº jÊİµÎMàê_ª{€ „€²8İº?«qHÓ/£8¯d©Oƒ©§x‹lºLpëè¨PjU{…ÍŠ€Jyğçl,£‡‚Şœ3Ó+†wöğmP:LÌmOÊšî'#Œÿ®L!ËÉƒ<ê@Kú«B:‘_ø~yp\¥Vé¨cœé»zôŸ…L×Âtª$%Ã0Æ”Mí¨~Şg÷Ş,İò·+±¶^y¶)o6¢UZÀL„ÛÉêû¿Öáö×6Ù¶}¦GLÇƒå?¡BÒßø^?¡ø:[pK_¢êlÊ“!êôæşŸŠ9¬äX¯m!¸„ƒƒİí3bÆŞd_q.”ñÆ7Ş¥—c{ìâETåşCìüæÓ­³	ÒµW2Q2š™Ä§ÌŠ©SŒæMD’qÓ2å?{„¡¯W(Â°7vŒß\aNNjÄfœmÙX÷R–CÍ’v°{³hƒŒ¼)Gá%ÔPµ±Åô—CÊ	8ïS'
-Hµãg…©×1÷]
-B!'!ÈÈ Ğ`h¡)Ñµ¸FüôÀŞú¿Ù±VwÃpmì	éDI»ÊPO Ñ·¹è°W)ŞtÊSEŞl÷óÂèÉ™¹n3Û@Ò@‚™5­]cöRÊ|®Æ1C©RÜPoåïŞ©a0Û"49‡
+
+package level02;
+
+import org.junit.Test;
+
+import com.google.common.collect.Multiset;
+
+import lib.EulerTest;
+
+public class p039 extends EulerTest {
+
+    final int N = 1000;
+
+    /**
+     * Find pâ‰¤N where the number of right triangles with perimeter p is maximized.
+     */
+    @Test
+    public void test() {
+        Multiset<Long> perims = mset();
+        pythagoreanTriples(N).generate(tr -> perims.add(tr.perim()));
+        for (long perim : rangeC(N))
+            if (perims.count(perim) > perims.count(ans))
+                ans = perim;
+        check(840);
+    }
+}

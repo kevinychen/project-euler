@@ -1,5 +1,25 @@
-13
-‡
-Ê‘ SsøŒš3Ä˜pÓ&Àâ½$´#ÆÇœ=¬M.CÛû÷µõWóØŠÅôiXOÂd‰“À¤`ØÑ@üæ-¾>úÎ‘nÛ×Lïã;Øä”zh|auÛpáø{û×ä½º¹.,í¸¯7ÇsIóKÅ=×«†ŸGÈ–½7í&ŞÚT ô>·™$ÑJxxlfµ$üoZ8©î»UøL—×àõ¿û ÓXÑP:©™ç×O;•1‹µè!‘‘¡9T¥5ôzŞÎ™\ÓÍ¡pŒDBiBUXj‘ö¶@1j©bm÷}§­øÑıIŞîí`Îi9c}tJ„1ˆµfÄ€^}—ìi4DYA=‰¼¼Şfùe2ÀÉ×Òı JÒŒKÅ?(ÎñMzé
-ãïÔİ”Ù…À).{&¯¨ğOA§›—ö¿]Pt™a õ6…¸v–;y“3à\şb=bwÊ­ıni^+9ÑFÃÚ¢rß]hØÌŞ«æ'ÚÜõx”È¬¤!Û%/›Àî;Ik·¡±J;öÎçøú+NÓ@|Á8/i~˜ñ2r™h'£–&
-c²³b–}rí‡c›»Ï3kj+öÅ|¿{^ŠŠÏ
+
+package level01;
+
+import java.math.BigInteger;
+
+import org.junit.Test;
+
+import lib.EulerTest;
+
+public class p013 extends EulerTest {
+
+    final int N = 10;
+
+    /**
+     * Find the first N digits of the sum of the given numbers.
+     */
+    @Test
+    public void test() {
+        BigInteger n = big(0);
+        for (String s : read())
+            n = n.add(big(s));
+        String ans = (n + "").substring(0, N);
+        check(ans, "5537376230");
+    }
+}

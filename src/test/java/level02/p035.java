@@ -1,3 +1,35 @@
-35
-'Ã7sëÎ ÒÔ	à|»pĞŸ…R¤¤Ëà¢¾*6al^ml	¶~ô6¿èCsA‘@ê’lh_¢ÿìá]²²úPï‚ãısš9å+>ì`½7ï“K"}áSÙMÒ5}ïŸh’…İ,õ3„,Ÿ”–•¸·’îiüCé¡VÚïÃ|Ö‘.ªÁ[±;İp•Öş/jswIÓD¤uá×\«_P¾ HY×¸é¹°–ßfjŞm˜÷¿‚¡Á´óıáL`¦ÎlJ^š,ÈIÈkvQ'×¯SaWˆIšÏÇä?“‡ˆ÷±i ;®mÀdãsôê<ñ©Ö½$àU¨÷›k¾4ĞDVµË¿)ã¥KIhrøØŞCø˜˜üÉ¯Ğ,JŸO€’ë…zL\`,A†Ğ
-*+,²¡–ó­‘ñéeò3é}~9;?™p*ÕÊ8åü¿ÊÌcNà~ïƒA¢±8ÁE—.Ii•Ÿ	G¼Ä}\ÑüUü/6lpÎPåsak®|íuÆØvÎ`PšLáç¾;33.w©nVˆˆ²5äX‹sJ28+Xç(Úõ¿·/‚öQ·»có—I‘Eİñqy#SßŞ¬¤—qd˜áş,²ì_MûƒÿûhyúÛôpe€ÆpîF›(.$ü×MãÑ1ògÆ–«Ü¡$«8ÊšŠØÅ+±‹ú¶ĞŸø<õk¼Ã|â{‘£R]LvAƒX¼3JWL¨ú#ØùÛC½A•s‘íêo©TD;µã²²ztØ˜ƒ,Š]µ!İÅ(ª·ŒXšåêb<²×çXî¿š•cE—9PU¥;)‹ŞTıKyL†¼C˜×v­Bë}ÊÔñi+¼Ñ¾WdÓ[×Pvo§¢âGó{¤XãG%yWtRéºË†Ì#Z:é_"ıõ•³«‚®(Û²³BÖ|ôÛ`‘%Úb¹c\4+wK{ìå¤‡%z}Ç²¦k_÷?Ú²X,Èş¸«í)"ÿJ!dQµ;îÎÄ¹¡í©×>­ífÊ\aÍ@f˜–~öIâİI5rÏ‰Ï—Cxâå“
+
+package level02;
+
+import org.junit.Test;
+
+import lib.EulerTest;
+
+public class p035 extends EulerTest {
+
+    final int B = 10;
+    final int L = 1000000;
+
+    /**
+     * Find the sum of all circular primes, primes where all rotations of the prime are prime (e.g.
+     * 197 is a circular prime because 197, 971, and 719 are prime.
+     */
+    @Test
+    public void test() {
+        for (int p : primes(L))
+            if (isCircularPrime(p))
+                ans++;
+        check(55);
+    }
+
+    boolean isCircularPrime(int n) {
+        int numDigits = Integer.toString(n, B).length();
+        int scale = ipow(B, numDigits - 1);
+        for (int i = 1; i < numDigits; i++) {
+            n = (n % scale) * B + n / scale;
+            if (!isPrime(n))
+                return false;
+        }
+        return true;
+    }
+}
