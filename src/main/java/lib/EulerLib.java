@@ -3,6 +3,7 @@ package lib;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -150,10 +151,6 @@ public class EulerLib {
         return Sets.newHashSet(set);
     }
 
-    public static <T> LinkedHashSet<T> lset() {
-        return Sets.newLinkedHashSet();
-    }
-
     public static <T extends Comparable<T>> TreeSet<T> tset() {
         return Sets.newTreeSet();
     }
@@ -190,13 +187,9 @@ public class EulerLib {
         return map;
     }
 
-    public static <T, U> LinkedHashMap<T, U> lmap() {
-        return Maps.newLinkedHashMap();
-    }
-
     @SuppressWarnings("unchecked")
     public static <T, U> LinkedHashMap<T, U> lmap(Object... objs) {
-        LinkedHashMap<T, U> map = lmap();
+        LinkedHashMap<T, U> map = Maps.newLinkedHashMap();
         for (int i = 0; i < objs.length; i += 2)
             map.put((T) objs[i], (U) objs[i + 1]);
         return map;
@@ -794,21 +787,34 @@ public class EulerLib {
         return factors;
     }
 
-    public static Map<Long, Integer> lprimeFactor(long n) {
-        Map<Long, Integer> factors = Maps.newHashMap();
-        for (long factor = 2; factor * factor <= n; factor++) {
+    public static List<Integer> mostPrimeFactors(long n) {
+        List<Integer> factors = new ArrayList<>();
+        for (int factor = 2; 1L * factor * factor <= n; factor++) {
             int e = 0;
             while (n % factor == 0) {
                 n /= factor;
                 e++;
             }
             if (e > 0) {
-                factors.put(factor, e);
+                factors.add(factor);
                 if (ff != null && n < ff.length) {
-                    primeFactor((int) n).forEach((p, f) -> factors.put(1L * p, f));
+                    primeFactor((int) n).forEach((p, f) -> factors.add(p));
                     return factors;
                 }
             }
+        }
+        return factors;
+    }
+
+    public static Map<Long, Integer> lprimeFactor(long n) {
+        Map<Long, Integer> factors = Maps.newHashMap();
+        for (long p : mostPrimeFactors(n)) {
+            int e = 0;
+            while (n % p == 0) {
+                n /= p;
+                e++;
+            }
+            factors.put(p, e);
         }
         if (n > 1)
             factors.put(n, 1);
@@ -1250,11 +1256,8 @@ public class EulerLib {
      */
     public static long order(long n, long mod) {
         long lphi = lphi(mod);
-        List<Integer> primeFactors = list();
-        for (long p : lprimeFactor(lphi).keySet())
-            primeFactors.add((int) p);
         long min = Long.MAX_VALUE;
-        for (long divisor : allDivisors(lphi, primeFactors))
+        for (long divisor : allDivisors(lphi, mostPrimeFactors(lphi)))
             if (divisor < min && pow(n, divisor, mod) == 1 % mod)
                 min = divisor;
         return min;
