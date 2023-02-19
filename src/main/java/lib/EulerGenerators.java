@@ -3,7 +3,6 @@ package lib;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 public final class EulerGenerators extends EulerLib {
@@ -39,13 +38,9 @@ public final class EulerGenerators extends EulerLib {
         return process(Stream.iterate(6563116L, S -> sq(S) % 32745673).skip(skip).iterator(), processor);
     }
 
-    private static <S, T> Generator<T> process(Iterator<S> supplier, Processor<S, T> processor) {
-        return new Generator<T>() {
-            @Override
-            public void generateUntil(Function<T, Boolean> f) {
-                while (!f.apply(processor.process(supplier)))
-                    ;
-            }
+    public static <S, T> Generator<T> process(Iterator<S> supplier, Processor<S, T> processor) {
+        return f -> {
+            while (!f.apply(processor.process(supplier)));
         };
     }
 
