@@ -36,15 +36,17 @@ Java programs for [Project Euler](https://projecteuler.net). Every solution sati
 
 ## One-time setup
 
-The solution files are encrypted. To decrypt them, first create an `answers.txt` file in the root directory with the following contents:
+The solution files are encrypted. To decrypt them, first run this in the root directory:
+
+    $ ./gradlew fetchAnswers
+
+You will be prompted to enter your Project Euler credentials. This is only for fetching the answers to your solved problems, in order to decrypt the files; the task does not save any data or make any changes to your account. The task automatically generates a `answers.txt` file with the answers to all of your solved problems:
 
     1. answer to Problem 1
     2. answer to Problem 2
     ...
 
-You do not need to include all the answers, but only the problems numbers listed in `answers.txt` will be decrypted.
-
-This file can be created manually, but an alternative is to run `./gradlew fetchAnswers`. This will prompt you to enter your Project Euler credentials. (Note: this is only for fetching the answers to your solved problems, in order to decrypt the files; the task does not save any data or make any changes to your account.) It then automatically generates a `answers.txt` file with answers to all of your solved problems.
+This file can also be created manually. You do not need to include all the answers, but only the problem numbers listed in `answers.txt` will be decrypted.
 
 Now run the following:
 
@@ -66,7 +68,7 @@ To run all tests (takes a few minutes):
 
 This repository requires Java 8+.
 
-For IntelliJ, run `./gradlew idea` and open the project.
+For IntelliJ, run `./gradlew idea` and open the project, or use the native Gradle integration.
 
 For Eclipse, run `./gradlew eclipse` and then import "Existing Projects into Workspace". You will also need to setup [Lombok](https://projectlombok.org/setup/eclipse).
 

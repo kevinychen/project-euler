@@ -19,12 +19,12 @@ import java.util.concurrent.ConcurrentHashMap
 import javax.swing.WindowConstants
 import org.jsoup.Jsoup
 
-final HOST = 'https://projecteuler.net';
-
 /**
  * Fetch the answers for all problems that the user has solved and write them to answers.txt.
  */
 def fetchAnswersTask() {
+    def HOST = 'https://projecteuler.net';
+
     // First visit the sign in page to get a PHPSESSID
     def connection = new URL("$HOST/sign_in").openConnection();
     def setCookieHeader = connection.getHeaderField('Set-cookie');
