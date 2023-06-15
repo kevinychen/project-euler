@@ -27,6 +27,6 @@ dependencies {
 }
 
 test {
-    jvmArgs "-Xmx4096m"
+    maxHeapSize = "4096m"
 }
 
