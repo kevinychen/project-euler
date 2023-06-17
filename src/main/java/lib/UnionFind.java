@@ -3,7 +3,7 @@ package lib;
 
 public class UnionFind {
 
-    private int[] parents, ranks, sizes;
+    private final int[] parents, ranks, sizes;
 
     public UnionFind(int maxNumObjs) {
         parents = new int[maxNumObjs];

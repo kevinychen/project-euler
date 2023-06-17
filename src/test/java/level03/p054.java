@@ -21,7 +21,7 @@ public class p054 extends EulerTest {
      */
     @Test
     public void test() {
-        read().stream().forEach(line -> {
+        read().forEach(line -> {
             String[] data = line.split(" ");
             List<Card> cards1 = list();
             for (int i : range(N))

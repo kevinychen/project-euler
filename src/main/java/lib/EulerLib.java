@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -255,10 +254,6 @@ public class EulerLib {
 
     public static double fsq(double n) {
         return n * n;
-    }
-
-    public static BigInteger sq(BigInteger n) {
-        return n.multiply(n);
     }
 
     public static boolean isSq(long n) {
@@ -593,7 +588,7 @@ public class EulerLib {
      */
     public static Generator<Long> numPartitions(long mod) {
         return new Generator<Long>() {
-            List<Long> allNumPartitions = list();
+            final List<Long> allNumPartitions = list();
 
             @Override
             public void generateUntil(Function<Long, Boolean> f) {
@@ -1480,7 +1475,7 @@ public class EulerLib {
      *
      * solve for the x_i using Thomas's algorithm
      * (https://en.wikipedia.org/wiki/Tridiagonal_matrix_algorithm).
-     *
+     * <p>
      * Note that a_0 and c_{n-1} are ignored. All b_i must be nonzero.
      */
     public static double[] tridiagonalSystem(double[] a, double[] b, double[] c, double[] d) {

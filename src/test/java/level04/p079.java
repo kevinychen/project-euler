@@ -26,8 +26,7 @@ public class p079 extends EulerTest {
         List<List<Character>> subsequences = Lists.transform(read(), Lists::charactersOf);
         Set<Character> allChars = set();
         for (List<Character> chars : subsequences)
-            for (char c : chars)
-                allChars.add(c);
+            allChars.addAll(chars);
         permutations(list(allChars)).generateUntil(permutation -> {
             for (List<Character> subsequence : subsequences)
                 if (!isSubsequence(permutation, subsequence))

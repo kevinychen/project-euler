@@ -118,7 +118,7 @@ public final class Pell extends EulerLib {
 
         long sqrtD = isqrt(D);
         return new Generator<PQaStep>() {
-            List<Long> As = list(0L, 1L), Bs = list(1L, 0L), Gs = list(-P0, Q0);
+            final List<Long> As = list(0L, 1L), Bs = list(1L, 0L), Gs = list(-P0, Q0);
             long P = P0, Q = Q0;
 
             @Override

@@ -145,7 +145,7 @@ public class FloorSums extends EulerLib {
 
     /**
      * Computes sum_{x=1}^N (x^K ⌊F*x⌋^L) in O((K + L)⁴ log N) time.
-     *
+     * <p>
      * See https://discuss.codechef.com/t/window-editorial/1069.
      */
     public long sumPowers(long N, ContinuedFraction F, int K, int L) {

@@ -63,7 +63,7 @@ then
         fi
 
         echo $number
-        echo "${contents//\\/\\\\}" | openssl enc -nosalt -aes-256-cbc -md md5 -pass pass:$pass 2> /dev/null
+        echo "$contents" | openssl enc -nosalt -aes-256-cbc -md md5 -pass pass:$pass 2> /dev/null
     else
         echo "Failed to encrypt file $number." 1>&2
         exit 0

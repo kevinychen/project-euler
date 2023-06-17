@@ -9,7 +9,7 @@ public final class EulerGenerators extends EulerLib {
 
     public static <T> Generator<T> laggedFibonacci(Processor<Integer, T> processor) {
         return process(new Iterator<Integer>() {
-            List<Integer> S = list(-1);
+            final List<Integer> S = list(-1);
 
             @Override
             public boolean hasNext() {

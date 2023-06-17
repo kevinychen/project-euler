@@ -8,7 +8,6 @@ import lib.EulerTest;
 public class p059 extends EulerTest {
 
     final int N = 3;
-    final int B = 26;
 
     /**
      * Find the sum of the ASCII values of the decrypted text, encrypted by repeatedly xor-ing with

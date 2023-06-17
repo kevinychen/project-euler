@@ -2,35 +2,35 @@
 
 Java programs for [Project Euler](https://projecteuler.net). Every solution satisfies the one-minute rule. Most solutions complete in less than a few seconds. To keep with the spirit of Project Euler, each solution after the first 100 problems is encrypted with its corresponding answer.
 
-| Level | Problems | Total time to run 25 solutions |
-| --- | --- | --- |
-| 1 | [1 to 25](src/test/java/level01) | 0.9 seconds |
-| 2 | [26 to 50](src/test/java/level02) | 1.0 seconds |
-| 3 | [51 to 75](src/test/java/level03) | 2.2 seconds |
-| 4 | [76 to 100](src/test/java/level04) | 1.7 seconds |
-| 5 | [101 to 125](src/test/java/level05) | 1.0 seconds |
-| 6 | [126 to 150](src/test/java/level06) | 2.2 seconds |
-| 7 | [151 to 175](src/test/java/level07) | 4.3 seconds |
-| 8 | [176 to 200](src/test/java/level08) | 5.7 seconds |
-| 9 | [201 to 225](src/test/java/level09) | 19.6 seconds |
-| 10 | [226 to 250](src/test/java/level10) | 11.3 seconds |
-| 11 | [251 to 275](src/test/java/level11) | 36.3 seconds |
-| 12 | [276 to 300](src/test/java/level12) | 28.8 seconds |
-| 13 | [301 to 325](src/test/java/level13) | 21.9 seconds |
-| 14 | [326 to 350](src/test/java/level14) | 25.2 seconds |
-| 15 | [351 to 375](src/test/java/level15) | 32.6 seconds |
-| 16 | [376 to 400](src/test/java/level16) | 30.7 seconds |
-| 17 | [401 to 425](src/test/java/level17) | 100.1 seconds |
-| 18 | [426 to 450](src/test/java/level18) | 80.2 seconds |
-| 19 | [451 to 475](src/test/java/level19) | 73.1 seconds |
-| 20 | [476 to 500](src/test/java/level20) | 54.9 seconds |
-| 21 | [501 to 525](src/test/java/level21) | 64.8 seconds |
-| 22 | [526 to 550](src/test/java/level22) | 64.9 seconds |
-| 23 | [551 to 575](src/test/java/level23) | 98.5 seconds |
-| 24 | [576 to 600](src/test/java/level24) | 82.6 seconds |
-| 25 | [601 to 625](src/test/java/level25) | 54.0 seconds |
-| 26 | [626 to 650](src/test/java/level26) | 81.3 seconds |
-| 27+ | 651+ | In progress! |
+| Level | Problems                            | Total time to run 25 solutions |
+|-------|-------------------------------------|--------------------------------|
+| 1     | [1 to 25](src/test/java/level01)    | 0.9 seconds                    |
+| 2     | [26 to 50](src/test/java/level02)   | 1.0 seconds                    |
+| 3     | [51 to 75](src/test/java/level03)   | 2.2 seconds                    |
+| 4     | [76 to 100](src/test/java/level04)  | 1.7 seconds                    |
+| 5     | [101 to 125](src/test/java/level05) | 1.0 seconds                    |
+| 6     | [126 to 150](src/test/java/level06) | 2.2 seconds                    |
+| 7     | [151 to 175](src/test/java/level07) | 4.3 seconds                    |
+| 8     | [176 to 200](src/test/java/level08) | 5.7 seconds                    |
+| 9     | [201 to 225](src/test/java/level09) | 19.6 seconds                   |
+| 10    | [226 to 250](src/test/java/level10) | 11.3 seconds                   |
+| 11    | [251 to 275](src/test/java/level11) | 36.3 seconds                   |
+| 12    | [276 to 300](src/test/java/level12) | 28.8 seconds                   |
+| 13    | [301 to 325](src/test/java/level13) | 21.9 seconds                   |
+| 14    | [326 to 350](src/test/java/level14) | 25.2 seconds                   |
+| 15    | [351 to 375](src/test/java/level15) | 32.6 seconds                   |
+| 16    | [376 to 400](src/test/java/level16) | 30.7 seconds                   |
+| 17    | [401 to 425](src/test/java/level17) | 100.1 seconds                  |
+| 18    | [426 to 450](src/test/java/level18) | 80.2 seconds                   |
+| 19    | [451 to 475](src/test/java/level19) | 73.1 seconds                   |
+| 20    | [476 to 500](src/test/java/level20) | 54.9 seconds                   |
+| 21    | [501 to 525](src/test/java/level21) | 64.8 seconds                   |
+| 22    | [526 to 550](src/test/java/level22) | 64.9 seconds                   |
+| 23    | [551 to 575](src/test/java/level23) | 98.5 seconds                   |
+| 24    | [576 to 600](src/test/java/level24) | 82.6 seconds                   |
+| 25    | [601 to 625](src/test/java/level25) | 54.0 seconds                   |
+| 26    | [626 to 650](src/test/java/level26) | 81.3 seconds                   |
+| 27+   | 651+                                | In progress!                   |
 
 (Run on Intel Core i9 @ 2.3GHz.)
 

@@ -16,7 +16,7 @@ public class p084 extends EulerTest {
     final int L = 1000000;
     final String[] BOARD = ("GO A1 CC1 A2 T1 R1 B1 CH1 B2 B3 JAIL C1 U1 C2 C3 R2 D1 CC2 D2 D3 "
             + "FP E1 CH2 E2 E3 R3 F1 F2 U2 F3 G2J G1 G2 CC3 G3 R4 CH3 H1 T2 H2").split(" ");
-    final int DOUBLE_LIMIT = 3, NUM_COMMUNITY_CHEST_CARDS = 16, NUM_CHANCE_CARDS = 16;
+    final int NUM_COMMUNITY_CHEST_CARDS = 16, NUM_CHANCE_CARDS = 16;
 
     /**
      * Find the 2K digit modal string that consists of the concatenation of the K most popular
@@ -27,17 +27,11 @@ public class p084 extends EulerTest {
     @Test
     public void test() {
         int[] squareFreqs = new int[BOARD.length];
-        int currSquare = 0, numDoubles = 0;
+        int currSquare = 0;
         for (int i = 0; i < L; i++) {
             squareFreqs[currSquare]++;
 
             int dice1 = randRange(N) + 1, dice2 = randRange(N) + 1;
-            if (dice1 == dice2 && ++numDoubles == DOUBLE_LIMIT) {
-                currSquare = square("JAIL");
-                numDoubles = 0;
-                continue;
-            } else
-                numDoubles = 0;
             currSquare = (currSquare + dice1 + dice2) % BOARD.length;
 
             if (BOARD[currSquare].startsWith("G2J"))
