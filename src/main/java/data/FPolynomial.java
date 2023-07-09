@@ -5,9 +5,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
 public class FPolynomial {
+
     public final double[] coefficients;
+
+    public FPolynomial(double... coefficients) {
+        this.coefficients = coefficients;
+    }
 
     public double evaluate(long n) {
         double evaluated = 0;
