@@ -31,6 +31,7 @@ import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 import com.google.common.collect.TreeMultiset;
 
+import data.FPoint;
 import data.FPolynomial;
 import data.LFraction;
 import data.LPoint;
@@ -661,6 +662,13 @@ public class EulerLib {
         for (T obj : objs)
             indexMap.put(obj, index++);
         return indexMap;
+    }
+
+    public static FPoint ternarySearch(double min, double max, Function<Double, Double> f) {
+        if (max - min < 1e-12)
+            return new FPoint(min, f.apply(min));
+        double mid1 = (2 * min + max) / 3, mid2 = (min + 2 * max) / 3;
+        return f.apply(mid1) > f.apply(mid2) ? ternarySearch(min, mid2, f) : ternarySearch(mid1, max, f);
     }
 
     /*********************************************************************************
