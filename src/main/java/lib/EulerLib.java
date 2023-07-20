@@ -84,16 +84,6 @@ public class EulerLib {
         throw new IllegalArgumentException("death");
     }
 
-    public static void runWithLargeStack(Runnable r) {
-        Thread thread = new Thread(null, r, "", 1 << 21);
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static <K, V> V memoize(Map<K, V> cache, K key, Function<K, V> f) {
         if (!cache.containsKey(key))
             cache.put(key, f.apply(key));
@@ -863,6 +853,8 @@ public class EulerLib {
     public static int[] phi;
 
     public static void prePhi(int limit) {
+        if (phi != null && phi.length > limit)
+            return;
         phi = new int[limit + 1];
         for (int i = 1; i <= limit; i++)
             phi[i] = i;
@@ -1357,6 +1349,8 @@ public class EulerLib {
     }
 
     public static void preSquareFrees(int n) {
+        if (isSquareFree != null && isSquareFree.length > n)
+            return;
         isSquareFree = new boolean[n + 1];
         for (int i = 1; i <= n; i++)
             isSquareFree[i] = true;
