@@ -339,6 +339,14 @@ public class EulerLib {
         return pows;
     }
 
+    public static double[] fpows(double base, int limit) {
+        double[] pows = new double[limit + 1];
+        pows[0] = 1;
+        for (int i = 1; i <= limit; i++)
+            pows[i] = pows[i - 1] * base;
+        return pows;
+    }
+
     public static long[] nthPows(int limit, long exp, long mod) {
         preff(limit);
         long[] pows = new long[limit + 1];
