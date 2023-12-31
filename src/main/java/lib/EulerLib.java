@@ -1058,6 +1058,12 @@ public class EulerLib {
         int a = 0;
         for (int b : bs)
             a += b;
+        if (a <= 20) {
+            long nCr = factorial(a);
+            for (int b : bs)
+                nCr /= factorial(b);
+            return nCr;
+        }
         BigInteger nCr = bfactorial(a);
         for (int b : bs)
             nCr = nCr.divide(bfactorial(b));
