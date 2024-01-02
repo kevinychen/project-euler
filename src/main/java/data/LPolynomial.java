@@ -195,9 +195,9 @@ public class LPolynomial {
         long[] fa = new long[n];
         long[] fb = new long[n];
         for (int i = 0; i < a.length; i++)
-            fa[i] = a[i];
+            fa[i] = EulerLib.mod(a[i], pmod);
         for (int i = 0; i < b.length; i++)
-            fb[i] = b[i];
+            fb[i] = EulerLib.mod(b[i], pmod);
 
         fft(fa, false, pmod);
         fft(fb, false, pmod);

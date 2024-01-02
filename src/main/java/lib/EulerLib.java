@@ -840,9 +840,9 @@ public class EulerLib {
     /**
      * Return all divisors of n, given the set of all but at most one unique prime factors.
      */
-    public static List<Long> allDivisors(long n, Collection<Integer> primeFactors) {
+    public static List<Long> allDivisors(long n, Collection<Integer> mostPrimeFactors) {
         List<Long> divisors = list(1L);
-        for (int p : primeFactors) {
+        for (int p : mostPrimeFactors) {
             int size = divisors.size();
             for (long prod = p; n % p == 0; prod *= p) {
                 for (int i = 0; i < size; i++)
