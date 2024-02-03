@@ -27,8 +27,8 @@ public class p100 extends EulerTest {
     @Test
     public void test() {
         Pell.negative(2).generateUntil(sol -> {
-            ans = (sol.y + 1) / 2;
-            return (sol.x + 1) / 2 > N;
+            ans = (sol.y.longValue() + 1) / 2;
+            return (sol.x.longValue() + 1) / 2 > N;
         });
         check(756872327473L);
     }

@@ -59,7 +59,7 @@ public class LPolynomial {
     }
 
     public LPolynomial multiply(LPolynomial other, long mod) {
-        if (this.coefficients.length * other.coefficients.length <= 1000)
+        if (1L * this.coefficients.length * other.coefficients.length <= 1000)
             return multiplyHelper(other, mod);
 
         if (Long.lowestOneBit(mod - 1) >= coefficients.length + other.coefficients.length && EulerLib.isProbablePrime(mod))

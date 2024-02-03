@@ -31,13 +31,13 @@ public final class Pell extends EulerLib {
     /**
      * Solve for all positive solutions of x²-Dy²=-1.
      */
-    public static Generator<LPoint> negative(long D) {
+    public static Generator<BPoint> negative(long D) {
         return f -> {
             FundamentalSolution fundamentalSolution = fundamentalSolution(D);
             if (fundamentalSolution.parity == 1)
                 return;
             LPoint scale = multiply(fundamentalSolution.sol, fundamentalSolution.sol, D);
-            for (LPoint sol = fundamentalSolution.sol; true; sol = multiply(sol, scale, D))
+            for (BPoint sol = BPoint.fromPoint(fundamentalSolution.sol); true; sol = multiply(sol, scale, D))
                 if (f.apply(sol))
                     break;
         };

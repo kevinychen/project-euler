@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -151,6 +152,10 @@ public class EulerLib {
 
     public static <T> Multiset<T> mset() {
         return HashMultiset.create();
+    }
+
+    public static <T> Multiset<T> mset(Iterable<T> set) {
+        return HashMultiset.create(set);
     }
 
     public static <T extends Comparable<T>> TreeMultiset<T> tmset() {
@@ -1195,7 +1200,7 @@ public class EulerLib {
         long crt = 0;
         for (int i = 0; i < as.size(); i++) {
             long m = ms.get(i).longValue();
-            crt += as.get(i).longValue() * (M / m) * modInv(M / m, m);
+            crt += as.get(i).longValue() * modInv(M / m, m) % m * (M / m);
         }
         return mod(crt, M);
     }

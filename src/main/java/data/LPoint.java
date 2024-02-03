@@ -53,7 +53,7 @@ public final class LPoint {
     }
 
     public double distanceTo(LPoint other) {
-        return Math.sqrt((other.x - x) * (other.x - x) + (other.y - y) * (other.y - y));
+        return Math.hypot(other.x - x, other.y - y);
     }
 
     @Override

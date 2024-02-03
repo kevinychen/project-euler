@@ -3,11 +3,9 @@ package data;
 
 import lib.EulerLib;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
-public final class LFraction extends EulerLib implements Comparable<LFraction> {
+public final class LFraction implements Comparable<LFraction> {
 
     public final long num, den;
 
@@ -17,7 +15,7 @@ public final class LFraction extends EulerLib implements Comparable<LFraction> {
     }
 
     public static LFraction reduced(long num, long den) {
-        long gcd = gcd(num, den);
+        long gcd = EulerLib.gcd(num, den);
         if (gcd == 0)
             gcd = 1;
         else if (den / gcd < 0)
@@ -32,7 +30,7 @@ public final class LFraction extends EulerLib implements Comparable<LFraction> {
     public LFraction add(LFraction other) {
         if (den == 0 || other.den == 0)
             return new LFraction(1, 0);
-        long l = lcm(den, other.den);
+        long l = EulerLib.lcm(den, other.den);
         return LFraction.reduced(l / den * num + l / other.den * other.num, l);
     }
 

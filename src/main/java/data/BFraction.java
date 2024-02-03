@@ -4,10 +4,8 @@ package data;
 import java.math.BigInteger;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
 public final class BFraction implements Comparable<BFraction> {
 
     public final BigInteger num, den;
@@ -36,16 +34,6 @@ public final class BFraction implements Comparable<BFraction> {
 
     public static BFraction integer(BigInteger num) {
         return new BFraction(num, BigInteger.ONE);
-    }
-
-    public static BFraction fromFraction(LFraction fraction) {
-        return reduced(fraction.num, fraction.den);
-    }
-
-    public BigInteger toBigInteger() {
-        if (!den.abs().equals(BigInteger.ONE))
-            throw new IllegalArgumentException("BFraction is not an exact integer");
-        return num.divide(den);
     }
 
     public BFraction add(BFraction other) {
