@@ -1,6 +1,8 @@
 # Project Euler Java library and solutions
 
-Java programs for [Project Euler](https://projecteuler.net). Every solution satisfies the one-minute rule. Most solutions complete in less than a few seconds. To keep with the spirit of Project Euler, each solution after the first 100 problems is encrypted with its corresponding answer.
+Java programs for [Project Euler](https://projecteuler.net). Every solution satisfies the one-minute rule. Most solutions complete in less than a few seconds.
+
+To keep with the spirit of Project Euler, each solution after the first 100 problems is encrypted with its corresponding answer. They can be decrypted with the [setup steps below](#one-time-setup).
 
 | Level | Problems                            | Total time to run 25 solutions |
 |-------|-------------------------------------|--------------------------------|
@@ -31,29 +33,34 @@ Java programs for [Project Euler](https://projecteuler.net). Every solution sati
 | 25    | [601 to 625](src/test/java/level25) | 29.2 seconds                   |
 | 26    | [626 to 650](src/test/java/level26) | 37.2 seconds                   |
 | 27    | [651 to 675](src/test/java/level27) | 16.4 seconds                   |
-| 28+   | 676+                                | In progress!                   |
+| 28    | [676 to 700](src/test/java/level28) | 37.7 seconds                   |
+| 29+   | 701+                                | In progress!                   |
 
 (Run on Apple M2 Max.)
 
 ## One-time setup
 
-The solution files are encrypted. To decrypt them, first run this in the root directory:
-
-    $ ./gradlew fetchAnswers
-
-You will be prompted to enter your Project Euler credentials. This is only for fetching the answers to your solved problems, in order to decrypt the files; the task does not save any data or make any changes to your account. The task automatically generates a `answers.txt` file with the answers to all of your solved problems:
+The solution files are encrypted. To decrypt them, you need a file named `answers.txt` in the root directory with the following format:
 
     1. answer to Problem 1
     2. answer to Problem 2
     ...
 
-This file can also be created manually. You do not need to include all the answers, but only the problem numbers listed in `answers.txt` will be decrypted.
+This file does not need to include all the answers, but only solution files with an included answer will be decrypted.
+
+To generate this file automatically for all problems that you've solved on the Project Euler website, run this in the root directory:
+
+    $ ./gradlew fetchAnswers
+
+You will be prompted to enter your Project Euler credentials. The task will generate an `answers.txt` file with answers for all solved problems on your account. It doesn't make any changes to your account.
 
 Now run the following:
 
     $ ./scripts/setup.sh
 
 Files in Git will now be automatically decrypted, and files added to Git will be automatically encrypted.
+
+The `setup.sh` script must be re-run if any changes are manually made to the `answers.txt` file.
 
 ## Running tests
 
