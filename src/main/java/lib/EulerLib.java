@@ -653,10 +653,7 @@ public class EulerLib {
     }
 
     public static <T> void addToMap(Map<T, Long> map, T key, long dval, long mod) {
-        if (map.containsKey(key))
-            map.put(key, (map.get(key) + dval) % mod);
-        else
-            map.put(key, dval);
+        map.compute(key, (_key, val) -> val == null ? dval : (val + dval) % mod);
     }
 
     public static <T> Map<T, Integer> indexMap(Iterable<T> objs) {
