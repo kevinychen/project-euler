@@ -1083,6 +1083,13 @@ public class EulerLib {
         return nCrs;
     }
 
+    public static long nPr(long a, int b) {
+        long nPr = 1;
+        for (int i = 0; i < b; i++)
+            nPr *= a - i;
+        return nPr;
+    }
+
     public static BigInteger isqrt(BigInteger b) {
         BigInteger sqrt = b.shiftRight(1);
         while (true) {
