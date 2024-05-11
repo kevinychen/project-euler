@@ -36,6 +36,7 @@ import data.FPoint;
 import data.FPolynomial;
 import data.LFraction;
 import data.LPoint;
+import data.LPolynomial;
 import data.LTriangle;
 import one.util.streamex.EntryStream;
 
@@ -291,7 +292,7 @@ public class EulerLib {
         return n * ((numSides - 2) * n - numSides + 4) / 2;
     }
 
-    public static int ipow(int a, int b) {
+    public static int ipow(int a, long b) {
         if (b == 0)
             return 1;
         int res = ipow(a, b / 2);
@@ -980,6 +981,33 @@ public class EulerLib {
         return factorial;
     }
 
+    public static long factorial(int n, long M) {
+        long factorial = 1;
+        if (n < 10_000_000)
+            for (int i = 1; i <= n; i++) {
+                factorial *= i;
+                factorial %= M;
+            }
+        else {
+            // https://fredrikj.net/blog/2012/03/factorials-mod-n-and-wilsons-theorem/
+            int l = isqrt(n);
+            List<LPolynomial> factors = list();
+            for (int i = 1; i <= l; i++) {
+                factors.add(new LPolynomial(i, 1));
+                while (factors.size() >= 2 && (penult(factors).degree() == last(factors).degree() || i == l))
+                    factors.add(removeLast(factors).multiply(removeLast(factors), M));
+            }
+            List<Long> ns = list();
+            for (long i = 0; i < n / l; i++)
+                ns.add(i * l);
+            for (long result : factors.get(0).evaluate(ns, M))
+                factorial = factorial * result % M;
+            for (long i = roundDown(n, l) + 1; i <= n; i++)
+                factorial = factorial * i % M;
+        }
+        return factorial;
+    }
+
     public static double ffactorial(int n) {
         double factorial = 1;
         for (int i = 1; i <= n; i++)
@@ -1619,11 +1647,12 @@ public class EulerLib {
      * GEOMETRY.
      *********************************************************************************/
 
+    /** Returns twice the area of the polygon with the given set of vertices. */
     public static long shoestring(LPoint... points) {
-        long area = 0;
+        long twiceArea = 0;
         for (int i = 0; i < points.length; i++)
-            area += points[i].cross(points[(i + 1) % points.length]);
-        return Math.abs(area);
+            twiceArea += points[i].cross(points[(i + 1) % points.length]);
+        return Math.abs(twiceArea);
     }
 
     /**

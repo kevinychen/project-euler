@@ -3,7 +3,9 @@ package data;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lib.EulerLib;
 import lombok.Data;
@@ -29,6 +31,23 @@ public class LPolynomial {
         for (int i = coefficients.length; --i >= 0;)
             evaluated = (evaluated * n + coefficients[i]) % mod;
         return evaluated;
+    }
+
+    public List<Long> evaluate(List<Long> ns, long mod) {
+        int l = EulerLib.iceilPow(ns.size(), 2);
+        LPolynomial[] subproductTree = new LPolynomial[2 * l];
+        for (int i = 0; i < l; i++)
+            subproductTree[l + i] = i < ns.size() ? new LPolynomial(-ns.get(i), 1) : new LPolynomial(1);
+        for (int i = l; --i >= 1; )
+            subproductTree[i] = subproductTree[2 * i].multiply(subproductTree[2 * i + 1], mod);
+        LPolynomial[] remainders = new LPolynomial[2 * l];
+        remainders[1] = divideAndRemainder(subproductTree[1], mod)[1];
+        for (int i = 2; i < l; i++)
+            remainders[i] = remainders[i / 2].divideAndRemainder(subproductTree[i], mod)[1];
+        List<Long> results = new ArrayList<>();
+        for (int i = 0; i < ns.size(); i++)
+            results.add(remainders[(l + i) / 2].evaluate(ns.get(i), mod));
+        return results;
     }
 
     public int degree() {
