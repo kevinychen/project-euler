@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
 }
 
@@ -9,20 +9,20 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply from: "${rootDir}/gradle/setup.gradle"
 
-sourceCompatibility = 1.8
+sourceCompatibility = 1.9
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
 
     implementation "com.google.guava:guava:27.1-jre"
     implementation "one.util:streamex:0.7.2"
     implementation "org.jacop:jacop:4.7.0"
-    implementation "org.projectlombok:lombok:1.18.24"
+    implementation "org.projectlombok:lombok:1.18.32"
     testImplementation "junit:junit:4.12"
 }
 
