@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,10 +27,8 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multiset;
-import com.google.common.collect.Sets;
 import com.google.common.collect.TreeMultiset;
 
 import data.FPoint;
@@ -109,46 +108,46 @@ public class EulerLib {
     }
 
     public static <T> List<T> list() {
-        return Lists.newArrayList();
+        return new ArrayList<>();
     }
 
     @SafeVarargs
     public static <T> List<T> list(T... objs) {
-        return Lists.newArrayList(objs);
+        return new ArrayList<>(Arrays.asList(objs));
     }
 
-    public static <T> List<T> list(Iterable<T> list) {
-        return Lists.newArrayList(list);
+    public static <T> List<T> list(Collection<T> list) {
+        return new ArrayList<>(list);
     }
 
     public static <T> LinkedList<T> llist() {
-        return Lists.newLinkedList();
+        return new LinkedList<>();
     }
 
     @SafeVarargs
     public static <T> LinkedList<T> llist(T... objs) {
-        return Lists.newLinkedList(Arrays.asList(objs));
+        return new LinkedList<>(Arrays.asList(objs));
     }
 
     public static <T> Set<T> set() {
-        return Sets.newHashSet();
+        return new HashSet<>();
     }
 
     @SafeVarargs
     public static <T> Set<T> set(T... objs) {
-        return Sets.newHashSet(objs);
+        return new HashSet<>(Arrays.asList(objs));
     }
 
-    public static <T> Set<T> set(Iterable<T> set) {
-        return Sets.newHashSet(set);
+    public static <T> Set<T> set(Collection<T> set) {
+        return new HashSet<>(set);
     }
 
     public static <T extends Comparable<T>> TreeSet<T> tset() {
-        return Sets.newTreeSet();
+        return new TreeSet<>();
     }
 
-    public static <T extends Comparable<T>> TreeSet<T> tset(Iterable<T> set) {
-        return Sets.newTreeSet(set);
+    public static <T extends Comparable<T>> TreeSet<T> tset(Collection<T> set) {
+        return new TreeSet<>(set);
     }
 
     public static <T> Multiset<T> mset() {
@@ -168,11 +167,11 @@ public class EulerLib {
     }
 
     public static <T, U> Map<T, U> map() {
-        return Maps.newHashMap();
+        return new HashMap<>();
     }
 
     public static <T, U> Map<T, U> map(Map<T, U> map) {
-        return Maps.newHashMap(map);
+        return new HashMap<>(map);
     }
 
     @SuppressWarnings("unchecked")
@@ -185,14 +184,14 @@ public class EulerLib {
 
     @SuppressWarnings("unchecked")
     public static <T, U> LinkedHashMap<T, U> lmap(Object... objs) {
-        LinkedHashMap<T, U> map = Maps.newLinkedHashMap();
+        LinkedHashMap<T, U> map = new LinkedHashMap<>();
         for (int i = 0; i < objs.length; i += 2)
             map.put((T) objs[i], (U) objs[i + 1]);
         return map;
     }
 
     public static <T extends Comparable<T>, U> TreeMap<T, U> tmap() {
-        return Maps.newTreeMap();
+        return new TreeMap<>();
     }
 
     @SuppressWarnings("unchecked")
@@ -811,7 +810,7 @@ public class EulerLib {
     }
 
     public static Map<Long, Integer> lprimeFactor(long n) {
-        Map<Long, Integer> factors = Maps.newHashMap();
+        Map<Long, Integer> factors = new HashMap<>();
         for (long p : mostPrimeFactors(n)) {
             int e = 0;
             while (n % p == 0) {
