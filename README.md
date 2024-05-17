@@ -35,7 +35,8 @@ To keep with the spirit of Project Euler, each solution after the first 100 prob
 | 27    | [651 to 675](src/test/java/level27) | 16.4 seconds                   |
 | 28    | [676 to 700](src/test/java/level28) | 37.7 seconds                   |
 | 29    | [701 to 725](src/test/java/level29) | 26.7 seconds                   |
-| 30+   | 726+                                | In progress!                   |
+| 30    | [726 to 750](src/test/java/level30) | 37.9 seconds                   |
+| 31+   | 751+                                | In progress!                   |
 
 (Run on Apple M2 Max.)
 

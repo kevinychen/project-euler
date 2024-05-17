@@ -26,8 +26,8 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultiset;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.TreeMultiset;
 
@@ -124,6 +124,10 @@ public class EulerLib {
         return new LinkedList<>();
     }
 
+    public static <T> LinkedList<T> llist(Collection<T> list) {
+        return new LinkedList<>(list);
+    }
+
     @SafeVarargs
     public static <T> LinkedList<T> llist(T... objs) {
         return new LinkedList<>(Arrays.asList(objs));
@@ -202,7 +206,7 @@ public class EulerLib {
         return map;
     }
 
-    public static <T, U> Multimap<T, U> mmap() {
+    public static <T, U> ListMultimap<T, U> mmap() {
         return ArrayListMultimap.create();
     }
 
