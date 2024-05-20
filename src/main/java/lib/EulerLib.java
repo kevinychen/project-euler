@@ -150,6 +150,10 @@ public class EulerLib {
         return new TreeSet<>();
     }
 
+    public static <T extends Comparable<T>> TreeSet<T> tset(T... objs) {
+        return new TreeSet<>(Arrays.asList(objs));
+    }
+
     public static <T extends Comparable<T>> TreeSet<T> tset(Collection<T> set) {
         return new TreeSet<>(set);
     }
