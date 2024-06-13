@@ -41,9 +41,9 @@ public class LPolynomial {
         for (int i = l; --i >= 1; )
             subproductTree[i] = subproductTree[2 * i].multiply(subproductTree[2 * i + 1], mod);
         LPolynomial[] remainders = new LPolynomial[2 * l];
-        remainders[1] = divideAndRemainder(subproductTree[1], mod)[1];
+        remainders[1] = mod(subproductTree[1], mod);
         for (int i = 2; i < l; i++)
-            remainders[i] = remainders[i / 2].divideAndRemainder(subproductTree[i], mod)[1];
+            remainders[i] = remainders[i / 2].mod(subproductTree[i], mod);
         List<Long> results = new ArrayList<>();
         for (int i = 0; i < ns.size(); i++)
             results.add(remainders[(l + i) / 2].evaluate(ns.get(i), mod));
@@ -122,6 +122,10 @@ public class LPolynomial {
         return multiply(other.reciprocal(mod), mod);
     }
 
+    public LPolynomial mod(LPolynomial other, long mod) {
+        return divideAndRemainder(other, mod)[1];
+    }
+
     public LPolynomial[] divideAndRemainder(LPolynomial other, long mod) {
         if (degree() < other.degree())
             return new LPolynomial[] { ZERO, this };
@@ -158,16 +162,16 @@ public class LPolynomial {
         if (e == 0)
             return new LPolynomial(1);
         LPolynomial res = pow(e / 2, mod1, mod2);
-        res = res.multiply(res, mod2).divideAndRemainder(mod1, mod2)[1];
+        res = res.multiply(res, mod2).mod(mod1, mod2);
         if (e % 2 != 0)
-            res = res.multiply(this, mod2).divideAndRemainder(mod1, mod2)[1];
+            res = res.multiply(this, mod2).mod(mod1, mod2);
         return res;
     }
 
     public LPolynomial gcd(LPolynomial other, long mod) {
         if (other.equals(LPolynomial.ZERO))
             return this;
-        return other.gcd(divideAndRemainder(other, mod)[1], mod);
+        return other.gcd(mod(other, mod), mod);
     }
 
     public LPolynomial shiftUp(int shift) {
