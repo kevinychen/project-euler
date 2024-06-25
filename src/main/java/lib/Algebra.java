@@ -79,14 +79,14 @@ public class Algebra extends EulerLib {
      * than that of a(x), and a_0 = 1. In other words, S satisfies the linear recurrence
      *
      * <pre>
-     * S_n ≡ a_1 S_{n-1} + a_2 S_{n-2} + ... + a_k S_{n-k} (mod p^e).
+     * S_n + a_1 S_{n-1} + a_2 S_{n-2} + ... + a_k S_{n-k} ≡ 0 (mod p^e).
      * </pre>
      *
      * This is implemented using the Reeds Sloane algorithm and runs in time O(k²). See the paper
      * "Shift-Register Synthesis (Modulo m)" by Reeds and Sloane, 1985
      * http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=E93C0581CA1D6F845B51BA8CD47433F2?doi=10.1.1.48.4652&rep=rep1&type=pdf.
      */
-    private static LPolynomial recurrence(Function<Integer, Long> S, int minOrder, long p, int e) {
+    public static LPolynomial recurrence(Function<Integer, Long> S, int minOrder, long p, int e) {
         long pe = pow(p, e);
         LPolynomial[] a = new LPolynomial[e];
         LPolynomial[] b = new LPolynomial[e];
