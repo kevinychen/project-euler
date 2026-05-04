@@ -150,6 +150,7 @@ public class EulerLib {
         return new TreeSet<>();
     }
 
+    @SafeVarargs
     public static <T extends Comparable<T>> TreeSet<T> tset(T... objs) {
         return new TreeSet<>(Arrays.asList(objs));
     }
@@ -800,7 +801,7 @@ public class EulerLib {
 
     public static List<Integer> mostPrimeFactors(long n) {
         List<Integer> factors = new ArrayList<>();
-        for (int factor = 2; 1L * factor * factor <= n; factor++) {
+        for (int factor = 2; sq(factor) <= n; factor++) {
             int e = 0;
             while (n % factor == 0) {
                 n /= factor;
@@ -1264,6 +1265,16 @@ public class EulerLib {
             crt = crt.add(as.get(i).multiply(M.divide(m)).multiply(M.divide(m).modInverse(m)));
         }
         return crt.mod(M);
+    }
+
+    /**
+     * Returns x such that x≡a1 (mod m1) and x≡a2 (mod m2), where m1 and m2 need not be co-prime.
+     */
+    public static long generalCrt(long a1, long m1, long a2, long m2) {
+        long g = gcd(m1, m2);
+        if (a1 % g != a2 % g)
+            return -1;
+        return mod(a1 - ((a1 - a2) / g * linComb(m1, m2).x) % (m2 / g) * m1, m1 / g * m2);
     }
 
     /**

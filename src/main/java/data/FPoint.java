@@ -32,11 +32,15 @@ public final class FPoint {
         return x * other.y - y * other.x;
     }
 
+    public double norm() {
+        return Math.sqrt(normSquared());
+    }
+
     public double normSquared() {
         return x * x + y * y;
     }
 
     public double dist(FPoint other) {
-        return Math.sqrt(subtract(other).normSquared());
+        return subtract(other).norm();
     }
 }
