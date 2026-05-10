@@ -27,7 +27,7 @@ dependencies {
 }
 
 test {
-    jvmArgs "-Xss2m"
+    jvmArgs "-Xss4m"
     maxHeapSize = "8192m"
 }
 
