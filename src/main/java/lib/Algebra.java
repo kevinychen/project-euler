@@ -74,6 +74,18 @@ public class Algebra extends EulerLib {
         };
     }
 
+    public static LPolynomial recurrence(Function<Integer, Long> S, int minOrder) {
+        long m = pow(10, 9) + 7;
+        LPolynomial f = recurrence(S, minOrder, m, 1);
+        for (int j = 0; j <= f.degree(); j++) {
+            if (f.coefficients[j] > m / 2)
+                f.coefficients[j] -= m;
+            if (f.coefficients[j] < -m / 2)
+                f.coefficients[j] += m;
+        }
+        return f;
+    }
+
     /**
      * Returns a polynomial a(x) such that S(x) a(x) (mod p^e) is a polynomial with degree smaller
      * than that of a(x), and a_0 = 1. In other words, S satisfies the linear recurrence
